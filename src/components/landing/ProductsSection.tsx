@@ -47,18 +47,19 @@ const ProductsSection = () => {
           </p>
         </div>
 
-        {/* Bulk Purchase Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-lg overflow-hidden border border-border mb-10 animate-fade-in-up" style={{ boxShadow: "var(--shadow-sm)" }}>
-          <div className="aspect-[4/3] md:aspect-auto overflow-hidden">
-            <img src={vcoBulk1} alt="Pembelian Curah VCO Barooka" className="w-full h-full object-cover" />
-          </div>
-          <div className="bg-card p-8 md:p-10 flex flex-col justify-center">
-            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir & Curah</p>
-            <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">Pembelian Curah & B2B</h3>
-            <p className="text-sm font-body text-muted-foreground leading-relaxed mb-6">
-              Melayani pembelian grosir mulai dari 5 Liter. Tersedia dalam jerigen dan drum untuk kebutuhan industri, HORECA, dan distributor. Harga spesial untuk pembelian dalam jumlah besar.
-            </p>
-            <div>
+        {/* Bulk & Maklon Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          {/* Bulk Purchase Card */}
+          <div className="bg-card rounded-lg overflow-hidden border border-border animate-fade-in-up" style={{ boxShadow: "var(--shadow-sm)" }}>
+            <div className="aspect-[16/9] overflow-hidden">
+              <img src={vcoBulk1} alt="Pembelian Curah VCO Barooka" className="w-full h-full object-cover" />
+            </div>
+            <div className="p-6 md:p-8">
+              <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir & Curah</p>
+              <h3 className="text-xl md:text-2xl font-display font-bold text-foreground mb-3">Pembelian Curah & B2B</h3>
+              <p className="text-sm font-body text-muted-foreground leading-relaxed mb-5">
+                Melayani pembelian grosir mulai dari 5 Liter. Tersedia dalam jerigen dan drum untuk kebutuhan industri, HORECA, dan distributor.
+              </p>
               <a
                 href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Halo, saya tertarik dengan VCO Barooka pembelian curah/grosir. Bisa minta penawaran harga?")}`}
                 target="_blank"
@@ -70,20 +71,18 @@ const ProductsSection = () => {
               </a>
             </div>
           </div>
-        </div>
 
-        {/* Maklon Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-lg overflow-hidden border border-border mb-16 animate-fade-in-up" style={{ boxShadow: "var(--shadow-sm)" }}>
-          <div className="aspect-[4/3] md:aspect-auto overflow-hidden md:order-1">
-            <img src={vcoBulk2} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
-          </div>
-          <div className="bg-card p-8 md:p-10 flex flex-col justify-center md:order-0">
-            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Layanan Maklon</p>
-            <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">Maklon VCO</h3>
-            <p className="text-sm font-body text-muted-foreground leading-relaxed mb-6">
-              Kami menyediakan layanan maklon (contract manufacturing) VCO dengan merek Anda sendiri. Mulai dari formulasi, pengemasan, hingga desain kemasan — semua kami tangani secara profesional. Minimum order berlaku.
-            </p>
-            <div>
+          {/* Maklon Card */}
+          <div className="bg-card rounded-lg overflow-hidden border border-border animate-fade-in-up" style={{ animationDelay: "0.15s", boxShadow: "var(--shadow-sm)" }}>
+            <div className="aspect-[16/9] overflow-hidden">
+              <img src={vcoBulk2} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
+            </div>
+            <div className="p-6 md:p-8">
+              <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Layanan Maklon</p>
+              <h3 className="text-xl md:text-2xl font-display font-bold text-foreground mb-3">Maklon VCO</h3>
+              <p className="text-sm font-body text-muted-foreground leading-relaxed mb-5">
+                Layanan maklon VCO dengan merek Anda sendiri. Mulai dari formulasi, pengemasan, hingga desain kemasan — semua kami tangani secara profesional.
+              </p>
               <a
                 href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Halo, saya tertarik dengan layanan maklon VCO. Bisa info lebih detail?")}`}
                 target="_blank"
