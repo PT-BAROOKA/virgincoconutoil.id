@@ -33,9 +33,9 @@ const ContactSection = () => {
             </p>
             <div className="space-y-4">
               {[
-                { icon: MapPin, text: "Jl. Raya Industri No. 123, Surabaya, Jawa Timur" },
+                { icon: MapPin, text: "AD Premier 9th Floor, Jl. TB Simatupang No. 5, Ragunan, Pasar Minggu, South Jakarta 12550" },
                 { icon: Phone, text: "+62 856-4748-6700" },
-                { icon: Mail, text: "info@barookavco.com" },
+                { icon: Mail, text: "info@virgincoconutoil.id" },
                 { icon: Clock, text: "Senin - Sabtu, 08:00 - 17:00 WIB" },
               ].map((item) => (
                 <div key={item.text} className="flex items-start gap-3">

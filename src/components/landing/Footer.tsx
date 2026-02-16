@@ -37,10 +37,13 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-3">Informasi</h4>
             <p className="text-sm font-body text-primary-foreground/70 leading-relaxed">
-              Jl. Raya Industri No. 123<br />
-              Surabaya, Jawa Timur<br />
+              PT Barooka Global Indonesia<br />
+              AD Premier 9th Floor<br />
+              Jl. TB Simatupang No. 5<br />
+              Ragunan, Pasar Minggu<br />
+              South Jakarta 12550<br />
               +62 856-4748-6700<br />
-              info@barookavco.com
+              info@virgincoconutoil.id
             </p>
           </div>
         </div>

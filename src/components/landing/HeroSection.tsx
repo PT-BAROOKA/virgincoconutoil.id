@@ -38,7 +38,7 @@ const HeroSection = () => {
         </p>
 
         <div className="inline-block bg-accent/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-          <span className="text-gold font-body font-semibold text-sm">Mulai dari Rp 45.000 / 250ml</span>
+          <span className="text-gold font-body font-semibold text-sm">Mulai dari Rp 110.000 / liter</span>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
@@ -52,8 +52,7 @@ const HeroSection = () => {
           <a href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`} target="_blank" rel="noopener noreferrer">
             <Button
               size="lg"
-              variant="outline"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-body px-8 w-full sm:w-auto"
+              className="border-2 border-white text-white bg-white/20 hover:bg-white/30 font-body font-semibold px-8 w-full sm:w-auto"
             >
               Hubungi WhatsApp
             </Button>

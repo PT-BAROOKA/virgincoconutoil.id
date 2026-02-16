@@ -7,9 +7,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
 const BLOG_TOPICS = [
   "manfaat virgin coconut oil (VCO) untuk kesehatan jantung dan pembuluh darah",
@@ -69,25 +70,27 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "category": "Tips Kesehatan"
 }`;
 
-  const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'google/gemini-3-flash-preview',
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}` }
+        { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}` },
       ],
+      temperature: 0.7,
+      response_format: { type: 'json_object' },
     }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('AI Gateway error:', response.status, errorText);
-    throw new Error(`AI Gateway error: ${response.status}`);
+    console.error('OpenAI Chat error:', response.status, errorText);
+    throw new Error(`OpenAI Chat error: ${response.status}`);
   }
 
   return response.json();
@@ -165,7 +168,7 @@ serve(async (req) => {
   }
 
   try {
-    if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY is not configured');
+    if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY is not configured');
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) throw new Error('Supabase credentials not configured');
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -203,7 +206,6 @@ serve(async (req) => {
 
     let rawContent = contentData.choices[0].message.content.trim();
 
-    // Clean up potential markdown wrapping
     rawContent = rawContent.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
     rawContent = rawContent
       .replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
@@ -213,6 +215,7 @@ serve(async (req) => {
 
     console.log('Parsing AI response...');
     const blogData = JSON.parse(rawContent);
+    const slug = `${blogData.slug}-${Date.now()}`;
 
     // Calculate word count & reading time
     const plainText = blogData.content.replace(/<[^>]+>/g, '');
@@ -224,7 +227,7 @@ serve(async (req) => {
       .from('blog_posts')
       .insert({
         title: blogData.title,
-        slug: `${blogData.slug}-${Date.now()}`,
+        slug,
         content_html: blogData.content,
         excerpt: blogData.excerpt,
         meta_title: blogData.title,
