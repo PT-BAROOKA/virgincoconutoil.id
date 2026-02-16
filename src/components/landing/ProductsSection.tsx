@@ -1,5 +1,5 @@
-import vcoBulk1 from "@/assets/vco-bulk-1.png";
-import vcoBulk2 from "@/assets/vco-bulk-2.png";
+import vcoBulk1 from "@/assets/Curah_produk.jpeg";
+import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
 import vco250ml from "@/assets/vco-250ml.jpg";
 import { Button } from "@/components/ui/button";
