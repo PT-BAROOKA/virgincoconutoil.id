@@ -1,13 +1,14 @@
 import vcoBulk1 from "@/assets/vco-bulk-1.png";
 import vcoBulk2 from "@/assets/vco-bulk-2.png";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
+import vco250ml from "@/assets/vco-250ml.jpg";
 import { Button } from "@/components/ui/button";
 
 const WA_NUMBER = "6285647486700";
 
 const retailProducts = [
   {
-    image: vcoBulk3,
+    image: vco250ml,
     title: "VCO Barooka 250ml",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
     price: "Rp 35.000",
