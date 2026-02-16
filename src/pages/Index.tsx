@@ -2,6 +2,7 @@ import Navbar from "@/components/landing/Navbar";
 import HeroSection from "@/components/landing/HeroSection";
 import WhyUsSection from "@/components/landing/WhyUsSection";
 import ProductsSection from "@/components/landing/ProductsSection";
+import BlogSection from "@/components/landing/BlogSection";
 import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
 import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
@@ -13,6 +14,7 @@ const Index = () => {
       <HeroSection />
       <WhyUsSection />
       <ProductsSection />
+      <BlogSection />
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
