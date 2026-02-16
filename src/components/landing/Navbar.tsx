@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import barookaLogo from "@/assets/barooka-logo.png";
+import barookaLogo from "@/assets/barooka_logo.png";
 
 const navLinks = [
   { label: "Beranda", href: "#beranda" },
