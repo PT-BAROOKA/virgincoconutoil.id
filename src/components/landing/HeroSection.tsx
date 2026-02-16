@@ -27,14 +27,14 @@ const HeroSection = () => {
 
       <div className="relative z-10 container-main px-4 md:px-8 text-center">
         <p className="text-gold-light font-body text-sm md:text-base tracking-widest uppercase mb-4 animate-fade-in-up">
-          Virgin Coconut Oil Premium
+          100% Murni · Cold-Pressed · Tinggi Asam Laurat
         </p>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-primary-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-          Kemurnian Alam <br className="hidden md:block" />
-          untuk Kesehatan Anda
+          Satu Botol untuk Kesehatan, <br className="hidden md:block" />
+          Kecantikan & Masakan Anda
         </h1>
         <p className="text-primary-foreground/80 font-body text-base md:text-lg max-w-2xl mx-auto mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          VCO Barooka diproses secara cold-pressed dari kelapa segar pilihan, menghasilkan minyak kelapa murni dengan kandungan asam laurat tertinggi untuk kesehatan & kecantikan.
+          VCO Barooka 100% murni dari kelapa segar pilihan. Tinggi asam laurat untuk menjaga imun tubuh, merawat kulit & rambut, serta menyehatkan masakan keluarga Anda.
         </p>
 
         <div className="inline-block bg-accent/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
