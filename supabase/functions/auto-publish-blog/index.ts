@@ -35,14 +35,14 @@ const BLOG_TOPICS = [
 ];
 
 const IMAGE_STYLES = [
-  "a professional product photo of virgin coconut oil bottles on a tropical wooden table with coconut leaves, soft natural lighting, high quality",
-  "a beautiful flat lay of coconut oil in a glass jar surrounded by fresh coconuts, tropical flowers, and green leaves on a marble surface, soft studio lighting",
-  "a close-up of golden virgin coconut oil being poured from a bottle, with coconut halves and palm leaves in the background, warm lighting",
-  "a lifestyle photo of virgin coconut oil bottles arranged with fresh coconuts on a beach setting, golden hour lighting, tropical vibes",
-  "a minimalist product shot of coconut oil in a clear bottle with coconut slices and tropical greenery, clean white background, elegant",
-  "a warm kitchen scene with virgin coconut oil being used for cooking, fresh vegetables and coconuts nearby, cozy natural lighting",
-  "a spa and wellness setting with coconut oil, tropical flowers, bamboo, and candles, relaxing atmosphere, soft warm tones",
-  "a birds-eye view of coconut oil surrounded by fresh coconuts, tropical fruits, and green leaves on a rustic wooden table, vibrant colors",
+  "a realistic photo of fresh coconuts cut in half showing white flesh with natural virgin coconut oil in a clear glass bottle beside them, tropical green leaves in background, soft natural daylight, high quality photography",
+  "a natural still life photo of a glass jar of pure virgin coconut oil next to whole and halved coconuts on a wooden cutting board, warm kitchen lighting, realistic and organic feel",
+  "a realistic close-up photo of golden virgin coconut oil being poured into a glass bowl, with fresh coconut halves and green palm leaves around, warm natural lighting",
+  "a healthy lifestyle photo showing virgin coconut oil in a clear glass bottle on a breakfast table with fruits, coconuts, and green salad, bright natural morning light, realistic photography",
+  "a realistic photo of coconut oil and fresh coconuts arranged on a rustic wooden table with tropical plants, natural outdoor lighting, warm tones, health and wellness theme",
+  "a natural photo of a woman applying coconut oil for skincare, fresh coconuts and a glass bottle of VCO on a bathroom counter, soft warm lighting, realistic beauty photography",
+  "a realistic photo of coconut trees and fresh coconuts on a tropical plantation, with a bottle of virgin coconut oil in the foreground, golden hour sunlight, natural landscape",
+  "a realistic kitchen scene photo with virgin coconut oil being used for healthy cooking, fresh vegetables and coconuts nearby, steam rising from pan, warm cozy home lighting",
 ];
 
 async function generateContent(topic: string) {
@@ -170,23 +170,23 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Check if we already published today
-    const oneDayAgo = new Date();
-    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    // Check if we already published in the last 2 days
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
     const { data: existingPost } = await supabase
       .from('blog_posts')
       .select('id, published_at')
-      .gte('published_at', oneDayAgo.toISOString())
+      .gte('published_at', twoDaysAgo.toISOString())
       .eq('source', 'ai')
       .order('published_at', { ascending: false })
       .limit(1)
       .single();
 
     if (existingPost) {
-      console.log('Blog post already published today, skipping');
+      console.log('Blog post already published in last 2 days, skipping');
       return new Response(
-        JSON.stringify({ message: 'Blog post already published today', skipped: true }),
+        JSON.stringify({ message: 'Blog post already published recently', skipped: true }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
