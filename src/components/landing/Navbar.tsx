@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -7,6 +7,7 @@ const navLinks = [
   { label: "Beranda", href: "#beranda" },
   { label: "Keunggulan", href: "#keunggulan" },
   { label: "Produk", href: "#produk" },
+  { label: "Blog", href: "/blog" },
   { label: "Kontak", href: "#kontak" },
 ];
 
@@ -16,12 +17,17 @@ const WA_MESSAGE = encodeURIComponent("Halo, saya ingin bertanya tentang produk 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
+    if (href.startsWith("/")) {
+      navigate(href);
+      return;
+    }
     if (href.startsWith("#")) {
       if (location.pathname !== "/") {
-        window.location.href = `/${href}`;
+        navigate(`/${href}`);
         return;
       }
       const el = document.querySelector(href);
