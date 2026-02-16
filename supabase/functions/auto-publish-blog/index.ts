@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
+import { decode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -31,6 +32,17 @@ const BLOG_TOPICS = [
   "perbedaan VCO organik dan non-organik: mana yang lebih baik?",
   "manfaat VCO untuk hewan peliharaan: kucing dan anjing",
   "tren penggunaan VCO di dunia kecantikan dan wellness internasional",
+];
+
+const IMAGE_STYLES = [
+  "a professional product photo of virgin coconut oil bottles on a tropical wooden table with coconut leaves, soft natural lighting, high quality",
+  "a beautiful flat lay of coconut oil in a glass jar surrounded by fresh coconuts, tropical flowers, and green leaves on a marble surface, soft studio lighting",
+  "a close-up of golden virgin coconut oil being poured from a bottle, with coconut halves and palm leaves in the background, warm lighting",
+  "a lifestyle photo of virgin coconut oil bottles arranged with fresh coconuts on a beach setting, golden hour lighting, tropical vibes",
+  "a minimalist product shot of coconut oil in a clear bottle with coconut slices and tropical greenery, clean white background, elegant",
+  "a warm kitchen scene with virgin coconut oil being used for cooking, fresh vegetables and coconuts nearby, cozy natural lighting",
+  "a spa and wellness setting with coconut oil, tropical flowers, bamboo, and candles, relaxing atmosphere, soft warm tones",
+  "a birds-eye view of coconut oil surrounded by fresh coconuts, tropical fruits, and green leaves on a rustic wooden table, vibrant colors",
 ];
 
 async function generateContent(topic: string) {
@@ -81,6 +93,72 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   return response.json();
 }
 
+async function generateBlogImage(topic: string): Promise<string | null> {
+  try {
+    const style = IMAGE_STYLES[Math.floor(Math.random() * IMAGE_STYLES.length)];
+    const prompt = `${style}, related to ${topic}, ultra high resolution, 16:9 aspect ratio`;
+
+    console.log('Generating blog image with prompt:', prompt.substring(0, 100));
+
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-image',
+        messages: [
+          { role: 'user', content: prompt }
+        ],
+        modalities: ['image', 'text'],
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Image generation error:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+
+    if (!imageUrl) {
+      console.log('No image generated');
+      return null;
+    }
+
+    // Extract base64 data and upload to storage
+    const base64Data = imageUrl.replace(/^data:image\/\w+;base64,/, '');
+    const imageBytes = decode(base64Data);
+    const fileName = `blog-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+    const { error: uploadError } = await supabase.storage
+      .from('blog-images')
+      .upload(fileName, imageBytes, {
+        contentType: 'image/png',
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError);
+      return null;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('blog-images')
+      .getPublicUrl(fileName);
+
+    console.log('Image uploaded:', publicUrlData.publicUrl);
+    return publicUrlData.publicUrl;
+  } catch (err) {
+    console.error('Image generation failed:', err);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -117,8 +195,12 @@ serve(async (req) => {
     const topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
     console.log('Generating blog about:', topic);
 
-    // Generate content
-    const contentData = await generateContent(topic);
+    // Generate content and image in parallel
+    const [contentData, featuredImageUrl] = await Promise.all([
+      generateContent(topic),
+      generateBlogImage(topic),
+    ]);
+
     let rawContent = contentData.choices[0].message.content.trim();
 
     // Clean up potential markdown wrapping
@@ -152,6 +234,8 @@ serve(async (req) => {
         category: blogData.category || 'Edukasi',
         word_count: wordCount,
         reading_time_minutes: readingTime,
+        featured_image_url: featuredImageUrl,
+        og_image_url: featuredImageUrl,
         status: 'published',
         source: 'ai',
         published_at: new Date().toISOString(),
@@ -164,10 +248,10 @@ serve(async (req) => {
       throw error;
     }
 
-    console.log('Blog post published:', blogPost.title);
+    console.log('Blog post published:', blogPost.title, 'with image:', !!featuredImageUrl);
 
     return new Response(
-      JSON.stringify({ success: true, post: { id: blogPost.id, title: blogPost.title, slug: blogPost.slug } }),
+      JSON.stringify({ success: true, post: { id: blogPost.id, title: blogPost.title, slug: blogPost.slug, hasImage: !!featuredImageUrl } }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

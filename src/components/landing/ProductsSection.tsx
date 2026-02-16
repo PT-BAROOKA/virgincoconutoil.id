@@ -1,31 +1,31 @@
-import vcoBottle from "@/assets/vco-bottle.jpg";
-import vcoCooking from "@/assets/vco-cooking.jpg";
-import vcoBeauty from "@/assets/vco-beauty.jpg";
+import vcoBulk1 from "@/assets/vco-bulk-1.png";
+import vcoBulk2 from "@/assets/vco-bulk-2.png";
+import vcoBulk3 from "@/assets/vco-bulk-3.png";
 import { Button } from "@/components/ui/button";
 
 const WA_NUMBER = "6285647486700";
 
 const products = [
   {
-    image: vcoBottle,
+    image: vcoBulk3,
     title: "VCO Barooka 250ml",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
     price: "Rp 45.000",
     waMessage: "Halo, saya ingin memesan VCO Barooka 250ml. Bisa info lebih lanjut?",
   },
   {
-    image: vcoCooking,
+    image: vcoBulk2,
     title: "VCO Barooka 500ml",
     desc: "Ukuran keluarga untuk kebutuhan memasak sehari-hari. Minyak kelapa murni cold-pressed yang menjaga cita rasa masakan Anda.",
     price: "Rp 80.000",
     waMessage: "Halo, saya ingin memesan VCO Barooka 500ml. Bisa info harganya?",
   },
   {
-    image: vcoBeauty,
-    title: "VCO Barooka 1 Liter",
-    desc: "Paket hemat untuk penggunaan rutin. Ideal untuk kebutuhan kecantikan, kesehatan, dan memasak seluruh keluarga.",
-    price: "Rp 145.000",
-    waMessage: "Halo, saya tertarik dengan VCO Barooka 1 Liter. Bisa minta penawaran?",
+    image: vcoBulk1,
+    title: "VCO Barooka Curah (1 Liter+)",
+    desc: "Pembelian curah untuk kebutuhan bisnis, reseller, atau maklon. Tersedia dalam berbagai ukuran mulai dari 1 liter hingga jerigen.",
+    price: "Hubungi Kami",
+    waMessage: "Halo, saya tertarik dengan VCO Barooka pembelian curah. Bisa minta penawaran?",
   },
 ];
 
