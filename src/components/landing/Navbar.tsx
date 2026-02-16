@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import barookaLogo from "@/assets/barooka-logo.png";
 
 const navLinks = [
   { label: "Beranda", href: "#beranda" },
@@ -38,9 +39,8 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container-main flex items-center justify-between px-4 py-3 md:px-8">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl font-display font-bold text-primary">Barooka</span>
-          <span className="text-sm font-body text-muted-foreground">VCO</span>
+        <Link to="/" className="flex items-center">
+          <img src={barookaLogo} alt="Barooka VCO" className="h-10" />
         </Link>
 
         {/* Desktop nav */}
