@@ -75,7 +75,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "tags": ["tag1", "tag2"],
   "slug": "url-friendly-slug-tanpa-spasi",
   "category": "Kesehatan | Kecantikan | Masakan",
-  "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. ATURAN WAJIB: (1) Gambar HARUS melibatkan PEREMPUAN BERHIJAB (Muslim women wearing hijab) — JANGAN gambar hewan. (2) JANGAN ada teks, tulisan, label, atau watermark di gambar. (3) Variasikan setiap gambar — JANGAN selalu botol kelapa. Contoh: kesehatan → perempuan berhijab sedang berolahraga pagi dengan suasana segar; kecantikan → close-up perempuan berhijab dengan kulit glowing sedang merawat wajah; masakan → ibu berhijab sedang memasak di dapur modern dengan bahan-bahan segar. Gunakan gaya fotografi realistis, pencahayaan natural, warna hangat."
+  "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. BRAND STYLE GUIDE (WAJIB KONSISTEN): (1) Gaya: lifestyle photography profesional, clean dan bright. (2) Warna: warm golden tones, cream, soft green — palette kelapa tropis. (3) Pencahayaan: natural soft light dari samping, golden hour feel. (4) Background: bersih dan minimalis — marble putih, kayu natural, linen, atau dapur modern. (5) Komposisi: rule of thirds, shallow depth of field dengan bokeh lembut. SUBJEK WAJIB: PEREMPUAN BERHIJAB (Muslim women wearing hijab) — bisa ibu berhijab dengan anak atau keluarga. Contoh: kesehatan → perempuan berhijab berolahraga pagi; kecantikan → close-up perempuan berhijab dengan kulit glowing merawat wajah; masakan → ibu berhijab memasak di dapur modern. LARANGAN KETAT: (1) JANGAN ada teks, tulisan, label, watermark. (2) JANGAN gambar hewan. (3) JANGAN gambar produk dengan label/brand."
 }`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -106,7 +106,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
 
 async function generateBlogImage(imagePrompt: string): Promise<string | null> {
   try {
-    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural warm lighting, 16:9 landscape composition, vibrant colors. IMPORTANT: absolutely no text, no labels, no words, no watermarks anywhere in the image. Must include Muslim women wearing hijab as human subjects.`;
+    const prompt = `${imagePrompt}. MANDATORY STYLE: professional lifestyle photography, warm golden color palette with cream and soft green tones, natural soft side lighting with golden hour feel, clean minimalist background, shallow depth of field with soft bokeh, 16:9 landscape, ultra high quality. NO text, NO labels, NO words, NO watermarks anywhere. Must feature Muslim women wearing hijab as subjects.`;
 
     console.log('Generating blog image with DALL-E 3:', prompt.substring(0, 100));
 
@@ -179,8 +179,51 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Pick random topic
-    const topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
+    // Safety check: skip if already published in last 2 days (prevents double-posting from cron)
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+    const { data: recentPost } = await supabase
+      .from('blog_posts')
+      .select('id, published_at')
+      .gte('published_at', twoDaysAgo.toISOString())
+      .eq('source', 'ai')
+      .order('published_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    // Allow manual override via request body { "force": true }
+    let forcePublish = false;
+    try {
+      const body = await req.json();
+      forcePublish = body?.force === true;
+    } catch { /* no body or invalid JSON, that's fine */ }
+
+    if (recentPost && !forcePublish) {
+      console.log('Blog post already published in last 2 days, skipping (use { "force": true } to override)');
+      return new Response(
+        JSON.stringify({ message: 'Blog post already published recently', skipped: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Smart topic rotation: pick topic not yet used, or least recently used
+    const { data: usedSlugs } = await supabase
+      .from('blog_posts')
+      .select('slug')
+      .eq('source', 'ai')
+      .order('published_at', { ascending: false })
+      .limit(BLOG_TOPICS.length);
+
+    const usedKeywords = (usedSlugs || []).map((p: { slug: string }) => p.slug.toLowerCase());
+    let topic = BLOG_TOPICS.find(t => {
+      const topicKey = t.toLowerCase().substring(0, 30);
+      return !usedKeywords.some(slug => slug.includes(topicKey.split(' ').slice(0, 3).join('-')));
+    });
+    // Fallback: if all topics used, pick random
+    if (!topic) {
+      topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
+    }
     console.log('Generating blog about:', topic);
 
     // Step 1: Generate article content (includes custom imagePrompt)
