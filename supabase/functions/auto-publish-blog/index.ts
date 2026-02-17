@@ -75,7 +75,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "tags": ["tag1", "tag2"],
   "slug": "url-friendly-slug-tanpa-spasi",
   "category": "Kesehatan | Kecantikan | Masakan",
-  "imagePrompt": "Deskripsi dalam bahasa Inggris untuk generate gambar featured blog yang relevan dengan isi artikel. Buat spesifik, visual, dan bervariasi. Contoh: untuk artikel kesehatan jantung → gambar orang sehat berolahraga dengan minyak kelapa; untuk artikel skincare → close-up wanita dengan kulit glowing dan produk alami; untuk artikel masakan → foto makanan yang menarik dengan VCO. JANGAN selalu pakai gambar botol kelapa — variasikan sesuai konteks artikel. Gunakan gaya fotografi realistis, pencahayaan natural, resolusi tinggi."
+  "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. ATURAN WAJIB: (1) Gambar HARUS melibatkan MANUSIA (orang dewasa, ibu, keluarga, wanita, dll) — JANGAN gambar hewan. (2) JANGAN ada teks, tulisan, label, atau watermark di gambar. (3) Variasikan setiap gambar — JANGAN selalu botol kelapa. Contoh: kesehatan → wanita Asia sehat sedang berolahraga pagi dengan suasana segar; kecantikan → close-up wanita dengan kulit glowing sedang merawat wajah; masakan → ibu sedang memasak di dapur modern dengan bahan-bahan segar. Gunakan gaya fotografi realistis, pencahayaan natural, warna hangat."
 }`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -106,7 +106,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
 
 async function generateBlogImage(imagePrompt: string): Promise<string | null> {
   try {
-    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural lighting, 16:9 landscape composition, vibrant colors, no text or watermarks.`;
+    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural warm lighting, 16:9 landscape composition, vibrant colors. IMPORTANT: absolutely no text, no labels, no words, no watermarks anywhere in the image. Must include human subjects.`;
 
     console.log('Generating blog image with DALL-E 3:', prompt.substring(0, 100));
 
@@ -178,27 +178,6 @@ serve(async (req) => {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) throw new Error('Supabase credentials not configured');
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    // Check if we already published in the last 2 days
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-
-    const { data: existingPost } = await supabase
-      .from('blog_posts')
-      .select('id, published_at')
-      .gte('published_at', twoDaysAgo.toISOString())
-      .eq('source', 'ai')
-      .order('published_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (existingPost) {
-      console.log('Blog post already published in last 2 days, skipping');
-      return new Response(
-        JSON.stringify({ message: 'Blog post already published recently', skipped: true }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
 
     // Pick random topic
     const topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
