@@ -11,22 +11,19 @@ const retailProducts = [
     image: vco250ml,
     title: "VCO Barooka 250ml",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
-    price: "Rp 35.000",
-    waMessage: "Halo, saya ingin memesan VCO Barooka 250ml. Bisa info lebih lanjut?",
+    waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 250ml. Bisa info harga dan cara pemesanannya?",
   },
   {
     image: vcoBulk2,
     title: "VCO Barooka 500ml",
     desc: "Ukuran keluarga untuk kebutuhan memasak sehari-hari. Minyak kelapa murni cold-pressed yang menjaga cita rasa masakan Anda.",
-    price: "Rp 65.000",
-    waMessage: "Halo, saya ingin memesan VCO Barooka 500ml. Bisa info harganya?",
+    waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 500ml. Bisa info harga dan cara pemesanannya?",
   },
   {
     image: vcoBulk3,
     title: "VCO Barooka 1 Liter",
     desc: "Ukuran hemat untuk kebutuhan keluarga atau usaha kecil. Minyak kelapa murni berkualitas tinggi dengan harga terbaik per mililiter.",
-    price: "Rp 105.000",
-    waMessage: "Halo, saya ingin memesan VCO Barooka 1 Liter. Bisa info harganya?",
+    waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 1 Liter. Bisa info harga dan cara pemesanannya?",
   },
 ];
 
@@ -123,18 +120,14 @@ const ProductsSection = () => {
               <div className="p-6">
                 <h3 className="text-xl font-display font-semibold text-foreground mb-2">{p.title}</h3>
                 <p className="text-sm font-body text-muted-foreground mb-4 leading-relaxed">{p.desc}</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-lg font-display font-bold text-accent">{p.price}</span>
-                    <span className="text-xs font-body text-muted-foreground ml-2">{p.pricePerMl}</span>
-                  </div>
+                <div className="flex items-center justify-center">
                   <a
                     href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(p.waMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-body">
-                      Pesan
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-body">
+                      Hubungi Kami
                     </Button>
                   </a>
                 </div>
