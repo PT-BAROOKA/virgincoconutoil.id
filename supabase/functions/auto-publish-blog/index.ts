@@ -48,6 +48,11 @@ const BLOG_TOPICS = [
 
 async function generateContent(topic: string) {
   const systemPrompt = `Kamu adalah penulis konten ahli tentang Virgin Coconut Oil (VCO) dari brand Barooka di Indonesia.
+Website resmi: virgincoconutoil.id
+Nama brand: Barooka Virgin Coconut Oil
+
+PENTING: Jika menyebutkan website atau URL, SELALU gunakan "virgincoconutoil.id". JANGAN PERNAH menyebutkan nama website lain atau nama website fiktif.
+
 Tulis artikel dalam Bahasa Indonesia yang informatif dan SEO-friendly tentang topik yang diberikan.
 
 FOKUS KONTEN (pilih salah satu sesuai topik):
