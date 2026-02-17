@@ -75,7 +75,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "tags": ["tag1", "tag2"],
   "slug": "url-friendly-slug-tanpa-spasi",
   "category": "Kesehatan | Kecantikan | Masakan",
-  "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. ATURAN WAJIB: (1) Gambar HARUS melibatkan MANUSIA (orang dewasa, ibu, keluarga, wanita, dll) — JANGAN gambar hewan. (2) JANGAN ada teks, tulisan, label, atau watermark di gambar. (3) Variasikan setiap gambar — JANGAN selalu botol kelapa. Contoh: kesehatan → wanita Asia sehat sedang berolahraga pagi dengan suasana segar; kecantikan → close-up wanita dengan kulit glowing sedang merawat wajah; masakan → ibu sedang memasak di dapur modern dengan bahan-bahan segar. Gunakan gaya fotografi realistis, pencahayaan natural, warna hangat."
+  "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. ATURAN WAJIB: (1) Gambar HARUS melibatkan PEREMPUAN BERHIJAB (Muslim women wearing hijab) — JANGAN gambar hewan. (2) JANGAN ada teks, tulisan, label, atau watermark di gambar. (3) Variasikan setiap gambar — JANGAN selalu botol kelapa. Contoh: kesehatan → perempuan berhijab sedang berolahraga pagi dengan suasana segar; kecantikan → close-up perempuan berhijab dengan kulit glowing sedang merawat wajah; masakan → ibu berhijab sedang memasak di dapur modern dengan bahan-bahan segar. Gunakan gaya fotografi realistis, pencahayaan natural, warna hangat."
 }`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -106,7 +106,7 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
 
 async function generateBlogImage(imagePrompt: string): Promise<string | null> {
   try {
-    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural warm lighting, 16:9 landscape composition, vibrant colors. IMPORTANT: absolutely no text, no labels, no words, no watermarks anywhere in the image. Must include human subjects.`;
+    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural warm lighting, 16:9 landscape composition, vibrant colors. IMPORTANT: absolutely no text, no labels, no words, no watermarks anywhere in the image. Must include Muslim women wearing hijab as human subjects.`;
 
     console.log('Generating blog image with DALL-E 3:', prompt.substring(0, 100));
 

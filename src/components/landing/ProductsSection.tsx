@@ -1,14 +1,14 @@
 import vcoBulk1 from "@/assets/Curah_produk.jpeg";
 import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
-import vco250ml from "@/assets/vco-250ml.jpg";
+import vcoProduct from "@/assets/vco-product.png";
 import { Button } from "@/components/ui/button";
 
 const WA_NUMBER = "6285647486700";
 
 const retailProducts = [
   {
-    image: vco250ml,
+    image: vcoProduct,
     title: "VCO Barooka 250ml",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
     price: "Rp 35.000",
@@ -16,7 +16,7 @@ const retailProducts = [
     waMessage: "Halo, saya ingin memesan VCO Barooka 250ml. Bisa info lebih lanjut?",
   },
   {
-    image: vcoBulk2,
+    image: vcoProduct,
     title: "VCO Barooka 500ml",
     desc: "Ukuran keluarga untuk kebutuhan memasak sehari-hari. Minyak kelapa murni cold-pressed yang menjaga cita rasa masakan Anda.",
     price: "Rp 65.000",
@@ -24,7 +24,7 @@ const retailProducts = [
     waMessage: "Halo, saya ingin memesan VCO Barooka 500ml. Bisa info harganya?",
   },
   {
-    image: vcoBulk3,
+    image: vcoProduct,
     title: "VCO Barooka 1 Liter",
     desc: "Ukuran hemat untuk kebutuhan keluarga atau usaha kecil. Minyak kelapa murni berkualitas tinggi dengan harga terbaik per mililiter.",
     price: "Rp 110.000",
