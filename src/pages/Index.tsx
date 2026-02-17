@@ -6,6 +6,7 @@ import BlogSection from "@/components/landing/BlogSection";
 import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
 import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
+import LeadCapturePopup from "@/components/landing/LeadCapturePopup";
 
 const Index = () => {
   return (
@@ -18,6 +19,7 @@ const Index = () => {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <LeadCapturePopup />
     </div>
   );
 };

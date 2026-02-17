@@ -3,14 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const WA_NUMBER = "6285647486700";
 
 const ContactSection = () => {
   const [form, setForm] = useState({ nama: "", wa: "", pesan: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Save lead to database
+    try {
+      await supabase.from("leads").insert({
+        nama: form.nama,
+        kontak: form.wa,
+        sumber: "website-kontak",
+      });
+    } catch {
+      // Don't block WhatsApp redirect on DB error
+    }
+
     const message = `Halo, saya ingin bertanya tentang VCO Barooka.\n\nNama: ${form.nama}\nWhatsApp: ${form.wa}\nPesan: ${form.pesan}`;
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
   };
