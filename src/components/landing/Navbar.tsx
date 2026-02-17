@@ -41,6 +41,9 @@ const Navbar = () => {
       <div className="container-main flex items-center justify-between px-4 py-3 md:px-8">
         <Link to="/" className="flex items-center">
           <img src={barookaLogo} alt="Barooka VCO" className="h-10" />
+          <span className="ml-2 font-display font-semibold text-foreground text-sm leading-tight">
+            Virgin<br />Coconut Oil
+          </span>
         </Link>
 
         {/* Desktop nav */}
