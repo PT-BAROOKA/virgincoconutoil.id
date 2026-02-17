@@ -10,45 +10,52 @@ const corsHeaders = {
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
 const BLOG_TOPICS = [
+  // Kesehatan
   "manfaat virgin coconut oil (VCO) untuk kesehatan jantung dan pembuluh darah",
-  "cara memilih VCO berkualitas dan membedakan VCO asli dari palsu",
+  "manfaat VCO untuk meningkatkan sistem imun tubuh secara alami",
+  "manfaat asam laurat dalam VCO untuk kesehatan tubuh",
+  "VCO untuk penderita diabetes: apakah aman dan bermanfaat?",
+  "VCO untuk mengatasi masalah pencernaan dan kesehatan usus",
+  "manfaat VCO untuk ibu hamil dan menyusui",
+  "VCO untuk bayi dan anak: manfaat dan cara penggunaan yang aman",
+  "manfaat VCO untuk kesehatan gigi dan mulut (oil pulling)",
+  "VCO untuk program diet sehat dan menurunkan berat badan",
+  "manfaat VCO untuk menurunkan kolesterol dan menjaga tekanan darah",
+  "VCO sebagai sumber energi cepat: manfaat MCT untuk tubuh",
+  "manfaat VCO untuk detoksifikasi tubuh secara alami",
+  // Kecantikan
   "manfaat VCO untuk perawatan kulit wajah: anti-aging, pelembab alami, dan mengatasi jerawat",
   "VCO untuk kesehatan rambut: cara menggunakan dan manfaatnya",
-  "manfaat VCO untuk meningkatkan sistem imun tubuh secara alami",
-  "VCO untuk program diet sehat dan menurunkan berat badan",
-  "cara membuat VCO murni di rumah dengan metode cold-pressed",
-  "manfaat asam laurat dalam VCO untuk kesehatan tubuh",
-  "VCO untuk bayi dan anak: manfaat dan cara penggunaan yang aman",
-  "perbandingan VCO dengan minyak kelapa biasa dari segi nutrisi dan manfaat",
-  "VCO untuk penderita diabetes: apakah aman dan bermanfaat?",
+  "VCO sebagai bahan alami untuk skincare dan kecantikan sehari-hari",
+  "cara menggunakan VCO sebagai makeup remover dan pembersih wajah alami",
+  "manfaat VCO untuk mengatasi kulit kering, eksim, dan dermatitis",
+  "VCO untuk perawatan kuku dan kutikula yang sehat dan kuat",
+  "manfaat VCO sebagai body lotion alami untuk kulit lembab sepanjang hari",
+  "VCO untuk mengatasi stretch mark dan bekas luka secara alami",
+  // Masakan
   "resep masakan sehat menggunakan VCO sebagai pengganti minyak goreng",
-  "manfaat VCO untuk kesehatan gigi dan mulut (oil pulling)",
-  "VCO sebagai bahan alami untuk skincare dan kecantikan",
-  "tips menyimpan VCO yang benar agar kualitasnya tetap terjaga",
-  "manfaat VCO untuk ibu hamil dan menyusui",
-  "VCO untuk mengatasi masalah pencernaan dan kesehatan usus",
-  "perbedaan VCO organik dan non-organik: mana yang lebih baik?",
-  "manfaat VCO untuk hewan peliharaan: kucing dan anjing",
-  "tren penggunaan VCO di dunia kecantikan dan wellness internasional",
+  "VCO untuk menggoreng: mengapa lebih sehat dari minyak goreng biasa?",
+  "resep smoothie dan minuman sehat dengan campuran VCO",
+  "tips memasak dengan VCO: suhu ideal dan cara agar masakan lebih sehat",
+  "resep salad dressing dan saus sehat berbahan dasar VCO",
+  "VCO dalam masakan tradisional Indonesia: dari rendang hingga kue",
+  "resep sarapan sehat dengan VCO: granola, oatmeal, dan roti panggang",
+  "manfaat mengganti mentega dengan VCO dalam resep kue dan roti",
 ];
 
-const IMAGE_STYLES = [
-  "a realistic photo of fresh coconuts cut in half showing white flesh with natural virgin coconut oil in a clear glass bottle beside them, tropical green leaves in background, soft natural daylight, high quality photography",
-  "a natural still life photo of a glass jar of pure virgin coconut oil next to whole and halved coconuts on a wooden cutting board, warm kitchen lighting, realistic and organic feel",
-  "a realistic close-up photo of golden virgin coconut oil being poured into a glass bowl, with fresh coconut halves and green palm leaves around, warm natural lighting",
-  "a healthy lifestyle photo showing virgin coconut oil in a clear glass bottle on a breakfast table with fruits, coconuts, and green salad, bright natural morning light, realistic photography",
-  "a realistic photo of coconut oil and fresh coconuts arranged on a rustic wooden table with tropical plants, natural outdoor lighting, warm tones, health and wellness theme",
-  "a natural photo of a woman applying coconut oil for skincare, fresh coconuts and a glass bottle of VCO on a bathroom counter, soft warm lighting, realistic beauty photography",
-  "a realistic photo of coconut trees and fresh coconuts on a tropical plantation, with a bottle of virgin coconut oil in the foreground, golden hour sunlight, natural landscape",
-  "a realistic kitchen scene photo with virgin coconut oil being used for healthy cooking, fresh vegetables and coconuts nearby, steam rising from pan, warm cozy home lighting",
-];
 
 async function generateContent(topic: string) {
-  const systemPrompt = `Kamu adalah penulis konten ahli tentang Virgin Coconut Oil (VCO) di Indonesia.
+  const systemPrompt = `Kamu adalah penulis konten ahli tentang Virgin Coconut Oil (VCO) dari brand Barooka di Indonesia.
 Tulis artikel dalam Bahasa Indonesia yang informatif dan SEO-friendly tentang topik yang diberikan.
+
+FOKUS KONTEN (pilih salah satu sesuai topik):
+- KESEHATAN: manfaat VCO untuk kesehatan tubuh, imunitas, pencernaan, jantung, dll.
+- KECANTIKAN: manfaat VCO untuk perawatan kulit, rambut, skincare alami, dll.
+- MASAKAN: resep dan tips memasak sehat menggunakan VCO sebagai bahan utama.
+
+Pastikan artikel selalu menghubungkan manfaat dengan penggunaan VCO secara praktis.
 
 ATURAN FORMAT HTML:
 - Setiap paragraf HARUS dibungkus tag <p></p>
@@ -67,7 +74,8 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "keywords": ["keyword1", "keyword2", "keyword3"],
   "tags": ["tag1", "tag2"],
   "slug": "url-friendly-slug-tanpa-spasi",
-  "category": "Tips Kesehatan"
+  "category": "Kesehatan | Kecantikan | Masakan",
+  "imagePrompt": "Deskripsi dalam bahasa Inggris untuk generate gambar featured blog yang relevan dengan isi artikel. Buat spesifik, visual, dan bervariasi. Contoh: untuk artikel kesehatan jantung → gambar orang sehat berolahraga dengan minyak kelapa; untuk artikel skincare → close-up wanita dengan kulit glowing dan produk alami; untuk artikel masakan → foto makanan yang menarik dengan VCO. JANGAN selalu pakai gambar botol kelapa — variasikan sesuai konteks artikel. Gunakan gaya fotografi realistis, pencahayaan natural, resolusi tinggi."
 }`;
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -96,44 +104,42 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   return response.json();
 }
 
-async function generateBlogImage(topic: string): Promise<string | null> {
+async function generateBlogImage(imagePrompt: string): Promise<string | null> {
   try {
-    const style = IMAGE_STYLES[Math.floor(Math.random() * IMAGE_STYLES.length)];
-    const prompt = `${style}, related to ${topic}, ultra high resolution, 16:9 aspect ratio`;
+    const prompt = `${imagePrompt}. Style: realistic high-quality photography, natural lighting, 16:9 landscape composition, vibrant colors, no text or watermarks.`;
 
-    console.log('Generating blog image with prompt:', prompt.substring(0, 100));
+    console.log('Generating blog image with DALL-E 3:', prompt.substring(0, 100));
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-image',
-        messages: [
-          { role: 'user', content: prompt }
-        ],
-        modalities: ['image', 'text'],
+        model: 'dall-e-3',
+        prompt,
+        n: 1,
+        size: '1792x1024',
+        response_format: 'b64_json',
       }),
     });
 
     if (!response.ok) {
-      console.error('Image generation error:', response.status);
+      console.error('DALL-E 3 error:', response.status);
       return null;
     }
 
     const data = await response.json();
-    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    const b64Data = data.data?.[0]?.b64_json;
 
-    if (!imageUrl) {
+    if (!b64Data) {
       console.log('No image generated');
       return null;
     }
 
-    // Extract base64 data and upload to storage
-    const base64Data = imageUrl.replace(/^data:image\/\w+;base64,/, '');
-    const imageBytes = decode(base64Data);
+    // Decode base64 and upload to storage
+    const imageBytes = decode(b64Data);
     const fileName = `blog-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
@@ -198,14 +204,10 @@ serve(async (req) => {
     const topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
     console.log('Generating blog about:', topic);
 
-    // Generate content and image in parallel
-    const [contentData, featuredImageUrl] = await Promise.all([
-      generateContent(topic),
-      generateBlogImage(topic),
-    ]);
+    // Step 1: Generate article content (includes custom imagePrompt)
+    const contentData = await generateContent(topic);
 
     let rawContent = contentData.choices[0].message.content.trim();
-
     rawContent = rawContent.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
     rawContent = rawContent
       .replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
@@ -215,6 +217,11 @@ serve(async (req) => {
 
     console.log('Parsing AI response...');
     const blogData = JSON.parse(rawContent);
+
+    // Step 2: Generate image using the article-specific prompt from GPT-4o
+    const featuredImageUrl = blogData.imagePrompt
+      ? await generateBlogImage(blogData.imagePrompt)
+      : null;
     const slug = `${blogData.slug}-${Date.now()}`;
 
     // Calculate word count & reading time
