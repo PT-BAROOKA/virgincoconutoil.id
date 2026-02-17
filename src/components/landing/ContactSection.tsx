@@ -33,9 +33,7 @@ const ContactSection = () => {
       <div className="container-main">
         <div className="text-center mb-12">
           <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Hubungi Kami</p>
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">
-            Ada Pertanyaan?
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">Ada Pertanyaan?</h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -46,7 +44,7 @@ const ContactSection = () => {
             </p>
             <div className="space-y-4">
               {[
-                { icon: MapPin, text: "AD Premier 9th Floor, Jl. TB Simatupang No. 5, Ragunan, Pasar Minggu, South Jakarta 12550" },
+                { icon: MapPin, text: "Tangerang Selatan" },
                 { icon: Phone, text: "+62 856-4748-6700" },
                 { icon: Mail, text: "info@virgincoconutoil.id" },
                 { icon: Clock, text: "Senin - Sabtu, 08:00 - 17:00 WIB" },
@@ -62,7 +60,11 @@ const ContactSection = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-card rounded-lg p-6 md:p-8 border border-border space-y-4" style={{ boxShadow: "var(--shadow-md)" }}>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-card rounded-lg p-6 md:p-8 border border-border space-y-4"
+            style={{ boxShadow: "var(--shadow-md)" }}
+          >
             <Input
               placeholder="Nama Anda"
               value={form.nama}
@@ -84,7 +86,10 @@ const ContactSection = () => {
               rows={4}
               className="font-body"
             />
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-body font-semibold">
+            <Button
+              type="submit"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-body font-semibold"
+            >
               Kirim via WhatsApp
             </Button>
           </form>
