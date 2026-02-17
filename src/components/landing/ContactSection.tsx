@@ -18,7 +18,7 @@ const ContactSection = () => {
       await supabase.from("leads").insert({
         nama: form.nama,
         kontak: form.wa,
-        sumber: "website-kontak",
+        sumber: "virgincoconutoil.id",
       });
     } catch {
       // Don't block WhatsApp redirect on DB error

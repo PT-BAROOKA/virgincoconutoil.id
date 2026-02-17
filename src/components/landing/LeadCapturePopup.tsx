@@ -37,7 +37,7 @@ const LeadCapturePopup = () => {
       await supabase.from("leads").insert({
         nama: form.nama,
         kontak: form.kontak,
-        sumber: "website-popup",
+        sumber: "virgincoconutoil.id",
       });
       setIsSuccess(true);
       setTimeout(() => handleClose(), 2500);
