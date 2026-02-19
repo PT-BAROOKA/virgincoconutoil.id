@@ -40,12 +40,7 @@ const Footer = () => {
             <p className="text-sm font-body text-primary-foreground/70 leading-relaxed">
               PT Barooka Global Indonesia
               <br />
-              AD Premier 9th Floor
-              <br />
-              Jl. TB Simatupang No. 5<br />
-              Ragunan, Pasar Minggu
-              <br />
-              South Jakarta 12550
+              Tangerang Selatan
               <br />
               +62 856-4748-6700
               <br />
