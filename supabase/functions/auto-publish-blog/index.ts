@@ -83,92 +83,107 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
   "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. BRAND STYLE GUIDE (WAJIB KONSISTEN): (1) Gaya: food photography profesional, clean dan bright, flat lay atau 45-degree angle. (2) Warna: warm golden tones, cream, soft green — palette kelapa tropis dan natural. (3) Pencahayaan: natural soft light dari samping, golden hour feel. (4) Background: bersih dan minimalis — marble putih, kayu natural, linen, cutting board, atau dapur modern. (5) Komposisi: rule of thirds, shallow depth of field dengan bokeh lembut. SUBJEK WAJIB: Minyak kelapa (coconut oil) dalam botol kaca bening atau jar, dikombinasikan dengan bahan-bahan segar yang BERVARIASI sesuai topik. Contoh variasi: (a) kesehatan → botol coconut oil dengan buah kelapa belah, daun mint, irisan lemon, kacang-kacangan; (b) kecantikan → jar coconut oil dengan bunga tropis, lavender, irisan mentimun, madu; (c) masakan → botol coconut oil dikelilingi sayuran segar (paprika, brokoli, wortel, tomat), rempah-rempah, herbs segar, bawang putih. Setiap gambar HARUS berbeda komposisi dan kombinasi bahan. LARANGAN KETAT: (1) JANGAN ada teks, tulisan, label, watermark. (2) JANGAN gambar orang/manusia. (3) JANGAN gambar produk dengan label/brand. (4) JANGAN gambar hewan."
 }`;
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${OPENAI_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}` },
-      ],
-      temperature: 0.7,
-      response_format: { type: 'json_object' },
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 50000); // 50s timeout
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('OpenAI Chat error:', response.status, errorText);
-    throw new Error(`OpenAI Chat error: ${response.status}`);
-  }
-
-  return response.json();
-}
-
-async function generateBlogImage(imagePrompt: string): Promise<string | null> {
   try {
-    const prompt = `${imagePrompt}. MANDATORY STYLE: professional food photography, warm golden color palette with cream and soft green tones, natural soft side lighting with golden hour feel, clean minimalist background, shallow depth of field with soft bokeh, 16:9 landscape, ultra high quality. NO text, NO labels, NO words, NO watermarks anywhere. NO people. Must feature coconut oil bottle/jar with fresh vegetables, fruits, herbs, or tropical ingredients as subjects.`;
-
-    console.log('Generating blog image with DALL-E 3:', prompt.substring(0, 100));
-
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'dall-e-3',
-        prompt,
-        n: 1,
-        size: '1792x1024',
-        response_format: 'b64_json',
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}` },
+        ],
+        temperature: 0.7,
+        response_format: { type: 'json_object' },
       }),
+      signal: controller.signal,
     });
 
     if (!response.ok) {
-      console.error('DALL-E 3 error:', response.status);
-      return null;
+      const errorText = await response.text();
+      console.error('OpenAI Chat error:', response.status, errorText);
+      throw new Error(`OpenAI Chat error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const b64Data = data.data?.[0]?.b64_json;
+    return response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
-    if (!b64Data) {
-      console.log('No image generated');
-      return null;
-    }
+async function generateBlogImage(imagePrompt: string): Promise<string | null> {
+  try {
+    const prompt = `${imagePrompt}. MANDATORY STYLE: professional food photography, warm golden color palette with cream and soft green tones, natural soft side lighting with golden hour feel, clean minimalist background, shallow depth of field with soft bokeh, 16:9 landscape, ultra high quality. NO text, NO labels, NO words, NO watermarks anywhere. NO people. Must feature coconut oil bottle/jar with fresh vegetables, fruits, herbs, or tropical ingredients as subjects.`;
 
-    // Decode base64 and upload to storage
-    const imageBytes = decode(b64Data);
-    const fileName = `blog-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+    console.log('Generating blog image with DALL-E 3...');
 
-    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 55000); // 55s timeout
 
-    const { error: uploadError } = await supabase.storage
-      .from('blog-images')
-      .upload(fileName, imageBytes, {
-        contentType: 'image/png',
-        upsert: false,
+    try {
+      const response = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'dall-e-3',
+          prompt,
+          n: 1,
+          size: '1792x1024',
+          response_format: 'b64_json',
+        }),
+        signal: controller.signal,
       });
 
-    if (uploadError) {
-      console.error('Upload error:', uploadError);
-      return null;
+      if (!response.ok) {
+        console.error('DALL-E 3 error:', response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      const b64Data = data.data?.[0]?.b64_json;
+
+      if (!b64Data) {
+        console.log('No image generated');
+        return null;
+      }
+
+      const imageBytes = decode(b64Data);
+      const fileName = `blog-${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+
+      const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+      const { error: uploadError } = await supabase.storage
+        .from('blog-images')
+        .upload(fileName, imageBytes, {
+          contentType: 'image/png',
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        return null;
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(fileName);
+
+      console.log('Image uploaded:', publicUrlData.publicUrl);
+      return publicUrlData.publicUrl;
+    } finally {
+      clearTimeout(timeout);
     }
-
-    const { data: publicUrlData } = supabase.storage
-      .from('blog-images')
-      .getPublicUrl(fileName);
-
-    console.log('Image uploaded:', publicUrlData.publicUrl);
-    return publicUrlData.publicUrl;
   } catch (err) {
-    console.error('Image generation failed:', err);
+    console.error('Image generation failed (will publish without image):', err);
     return null;
   }
 }
@@ -184,7 +199,7 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Safety check: skip if already published in last 2 days (prevents double-posting from cron)
+    // Safety check: skip if already published in last 2 days
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
@@ -197,22 +212,21 @@ serve(async (req) => {
       .limit(1)
       .single();
 
-    // Allow manual override via request body { "force": true }
     let forcePublish = false;
     try {
       const body = await req.json();
       forcePublish = body?.force === true;
-    } catch { /* no body or invalid JSON, that's fine */ }
+    } catch { /* no body */ }
 
     if (recentPost && !forcePublish) {
-      console.log('Blog post already published in last 2 days, skipping (use { "force": true } to override)');
+      console.log('Blog post already published in last 2 days, skipping');
       return new Response(
         JSON.stringify({ message: 'Blog post already published recently', skipped: true }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Smart topic rotation: pick topic not yet used, or least recently used
+    // Smart topic rotation
     const { data: usedSlugs } = await supabase
       .from('blog_posts')
       .select('slug')
@@ -225,38 +239,31 @@ serve(async (req) => {
       const topicKey = t.toLowerCase().substring(0, 30);
       return !usedKeywords.some(slug => slug.includes(topicKey.split(' ').slice(0, 3).join('-')));
     });
-    // Fallback: if all topics used, pick random
     if (!topic) {
       topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
     }
     console.log('Generating blog about:', topic);
 
-    // Step 1: Generate article content (includes custom imagePrompt)
+    // Step 1: Generate article content
     const contentData = await generateContent(topic);
 
     let rawContent = contentData.choices[0].message.content.trim();
     rawContent = rawContent.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
-    rawContent = rawContent
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
-        if (char === '\n' || char === '\t') return char;
-        return '';
-      });
+    rawContent = rawContent.replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
+      if (char === '\n' || char === '\t') return char;
+      return '';
+    });
 
     console.log('Parsing AI response...');
     const blogData = JSON.parse(rawContent);
 
-    // Step 2: Generate image using the article-specific prompt from GPT-4o
-    const featuredImageUrl = blogData.imagePrompt
-      ? await generateBlogImage(blogData.imagePrompt)
-      : null;
     const slug = `${blogData.slug}-${Date.now()}`;
 
-    // Calculate word count & reading time
     const plainText = blogData.content.replace(/<[^>]+>/g, '');
     const wordCount = plainText.split(/\s+/).filter(Boolean).length;
     const readingTime = Math.ceil(wordCount / 200);
 
-    // Insert blog post
+    // Step 2: Insert blog post FIRST (without image) to avoid timeout
     const { data: blogPost, error } = await supabase
       .from('blog_posts')
       .insert({
@@ -271,8 +278,8 @@ serve(async (req) => {
         category: blogData.category || 'Edukasi',
         word_count: wordCount,
         reading_time_minutes: readingTime,
-        featured_image_url: featuredImageUrl,
-        og_image_url: featuredImageUrl,
+        featured_image_url: null,
+        og_image_url: null,
         status: 'published',
         source: 'ai',
         published_at: new Date().toISOString(),
@@ -285,10 +292,26 @@ serve(async (req) => {
       throw error;
     }
 
-    console.log('Blog post published:', blogPost.title, 'with image:', !!featuredImageUrl);
+    console.log('Blog post published (text only):', blogPost.title);
+
+    // Step 3: Generate image in background, update post if successful
+    try {
+      if (blogData.imagePrompt) {
+        const featuredImageUrl = await generateBlogImage(blogData.imagePrompt);
+        if (featuredImageUrl) {
+          await supabase
+            .from('blog_posts')
+            .update({ featured_image_url: featuredImageUrl, og_image_url: featuredImageUrl })
+            .eq('id', blogPost.id);
+          console.log('Image added to post:', featuredImageUrl);
+        }
+      }
+    } catch (imgErr) {
+      console.error('Image generation skipped, post published without image:', imgErr);
+    }
 
     return new Response(
-      JSON.stringify({ success: true, post: { id: blogPost.id, title: blogPost.title, slug: blogPost.slug, hasImage: !!featuredImageUrl } }),
+      JSON.stringify({ success: true, post: { id: blogPost.id, title: blogPost.title, slug: blogPost.slug } }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
