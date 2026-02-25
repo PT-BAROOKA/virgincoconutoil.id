@@ -204,7 +204,7 @@ serve(async (req) => {
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
     const { data: recentPost } = await supabase
-      .from('blog_posts')
+      .from('vco_blog_posts')
       .select('id, published_at')
       .gte('published_at', twoDaysAgo.toISOString())
       .eq('source', 'ai')
@@ -228,7 +228,7 @@ serve(async (req) => {
 
     // Smart topic rotation
     const { data: usedSlugs } = await supabase
-      .from('blog_posts')
+      .from('vco_blog_posts')
       .select('slug')
       .eq('source', 'ai')
       .order('published_at', { ascending: false })
@@ -265,7 +265,7 @@ serve(async (req) => {
 
     // Step 2: Insert blog post FIRST (without image) to avoid timeout
     const { data: blogPost, error } = await supabase
-      .from('blog_posts')
+      .from('vco_blog_posts')
       .insert({
         title: blogData.title,
         slug,
