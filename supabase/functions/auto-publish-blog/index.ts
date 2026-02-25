@@ -300,7 +300,7 @@ serve(async (req) => {
         const featuredImageUrl = await generateBlogImage(blogData.imagePrompt);
         if (featuredImageUrl) {
           await supabase
-            .from('blog_posts')
+            .from('vco_blog_posts')
             .update({ featured_image_url: featuredImageUrl, og_image_url: featuredImageUrl })
             .eq('id', blogPost.id);
           console.log('Image added to post:', featuredImageUrl);
