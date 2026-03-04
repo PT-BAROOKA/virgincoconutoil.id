@@ -199,32 +199,8 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Safety check: skip if already published in last 2 days
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-
-    const { data: recentPost } = await supabase
-      .from('vco_blog_posts')
-      .select('id, published_at')
-      .gte('published_at', twoDaysAgo.toISOString())
-      .eq('source', 'ai')
-      .order('published_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    let forcePublish = false;
-    try {
-      const body = await req.json();
-      forcePublish = body?.force === true;
-    } catch { /* no body */ }
-
-    if (recentPost && !forcePublish) {
-      console.log('Blog post already published in last 2 days, skipping');
-      return new Response(
-        JSON.stringify({ message: 'Blog post already published recently', skipped: true }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // No cooldown check — cron schedule (*/2 days) handles timing
+    // This ensures the function ALWAYS creates a post when called
 
     // Smart topic rotation
     const { data: usedSlugs } = await supabase
