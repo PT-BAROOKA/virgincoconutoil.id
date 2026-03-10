@@ -46,7 +46,11 @@ const BLOG_TOPICS = [
 ];
 
 
-async function generateContent(topic: string) {
+async function generateContent(topic: string, existingTitles: string[] = []) {
+  const avoidTitlesNote = existingTitles.length > 0
+    ? `\n\nJudul yang SUDAH ADA (JANGAN buat judul serupa):\n${existingTitles.slice(0, 10).map(t => `- ${t}`).join('\n')}\nBuat judul yang BERBEDA dan UNIK.`
+    : '';
+
   const systemPrompt = `Kamu adalah penulis konten ahli tentang Virgin Coconut Oil (VCO) dari brand Barooka di Indonesia.
 Website resmi: virgincoconutoil.id
 Nama brand: Barooka Virgin Coconut Oil
@@ -97,9 +101,9 @@ Kembalikan HANYA JSON object (tanpa markdown code block):
         model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}` },
+          { role: 'user', content: `Tulis artikel lengkap tentang: ${topic}${avoidTitlesNote}` },
         ],
-        temperature: 0.7,
+        temperature: 0.8,
         response_format: { type: 'json_object' },
       }),
       signal: controller.signal,
@@ -202,26 +206,37 @@ serve(async (req) => {
     // No cooldown check — cron schedule (*/2 days) handles timing
     // This ensures the function ALWAYS creates a post when called
 
-    // Smart topic rotation
-    const { data: usedSlugs } = await supabase
+    // Smart topic rotation — match by title similarity to avoid duplicates
+    const { data: existingPosts } = await supabase
       .from('vco_blog_posts')
-      .select('slug')
+      .select('title')
       .eq('source', 'ai')
       .order('published_at', { ascending: false })
       .limit(BLOG_TOPICS.length);
 
-    const usedKeywords = (usedSlugs || []).map((p: { slug: string }) => p.slug.toLowerCase());
+    const existingTitles = (existingPosts || []).map((p: { title: string }) => p.title.toLowerCase());
+
+    // Extract key phrases from each topic for matching against existing titles
     let topic = BLOG_TOPICS.find(t => {
-      const topicKey = t.toLowerCase().substring(0, 30);
-      return !usedKeywords.some(slug => slug.includes(topicKey.split(' ').slice(0, 3).join('-')));
+      const topicWords = t.toLowerCase()
+        .replace(/[:()?]/g, '')
+        .split(/\s+/)
+        .filter(w => w.length > 3); // only significant words
+      // Check if any existing title contains most of the topic's key words
+      return !existingTitles.some(title => {
+        const matchCount = topicWords.filter(w => title.includes(w)).length;
+        return matchCount >= Math.ceil(topicWords.length * 0.5); // 50% word match = same topic
+      });
     });
     if (!topic) {
-      topic = BLOG_TOPICS[Math.floor(Math.random() * BLOG_TOPICS.length)];
+      // All topics used — pick least recently used by cycling from start
+      const totalPosts = existingPosts?.length || 0;
+      topic = BLOG_TOPICS[totalPosts % BLOG_TOPICS.length];
     }
     console.log('Generating blog about:', topic);
 
-    // Step 1: Generate article content
-    const contentData = await generateContent(topic);
+    // Step 1: Generate article content (pass existing titles to avoid duplicate titles)
+    const contentData = await generateContent(topic, existingTitles);
 
     let rawContent = contentData.choices[0].message.content.trim();
     rawContent = rawContent.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();

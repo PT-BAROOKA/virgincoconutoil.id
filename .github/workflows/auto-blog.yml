@@ -10,20 +10,326 @@ jobs:
   publish-blog:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger auto-publish-blog function
+      - name: Generate and publish blog post
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_V2 }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST \
-            "https://wfthvovlhphnrodrqxqt.supabase.co/functions/v1/auto-publish-blog" \
+          set -e
+
+          # ============================================================
+          # BLOG TOPICS
+          # ============================================================
+          TOPICS=(
+            "manfaat virgin coconut oil (VCO) untuk kesehatan jantung dan pembuluh darah"
+            "manfaat VCO untuk meningkatkan sistem imun tubuh secara alami"
+            "manfaat asam laurat dalam VCO untuk kesehatan tubuh"
+            "VCO untuk penderita diabetes: apakah aman dan bermanfaat?"
+            "VCO untuk mengatasi masalah pencernaan dan kesehatan usus"
+            "manfaat VCO untuk ibu hamil dan menyusui"
+            "VCO untuk bayi dan anak: manfaat dan cara penggunaan yang aman"
+            "manfaat VCO untuk kesehatan gigi dan mulut (oil pulling)"
+            "VCO untuk program diet sehat dan menurunkan berat badan"
+            "manfaat VCO untuk menurunkan kolesterol dan menjaga tekanan darah"
+            "VCO sebagai sumber energi cepat: manfaat MCT untuk tubuh"
+            "manfaat VCO untuk detoksifikasi tubuh secara alami"
+            "manfaat VCO untuk perawatan kulit wajah: anti-aging, pelembab alami, dan mengatasi jerawat"
+            "VCO untuk kesehatan rambut: cara menggunakan dan manfaatnya"
+            "VCO sebagai bahan alami untuk skincare dan kecantikan sehari-hari"
+            "cara menggunakan VCO sebagai makeup remover dan pembersih wajah alami"
+            "manfaat VCO untuk mengatasi kulit kering, eksim, dan dermatitis"
+            "VCO untuk perawatan kuku dan kutikula yang sehat dan kuat"
+            "manfaat VCO sebagai body lotion alami untuk kulit lembab sepanjang hari"
+            "VCO untuk mengatasi stretch mark dan bekas luka secara alami"
+            "resep masakan sehat menggunakan VCO sebagai pengganti minyak goreng"
+            "VCO untuk menggoreng: mengapa lebih sehat dari minyak goreng biasa?"
+            "resep smoothie dan minuman sehat dengan campuran VCO"
+            "tips memasak dengan VCO: suhu ideal dan cara agar masakan lebih sehat"
+            "resep salad dressing dan saus sehat berbahan dasar VCO"
+            "VCO dalam masakan tradisional Indonesia: dari rendang hingga kue"
+            "resep sarapan sehat dengan VCO: granola, oatmeal, dan roti panggang"
+            "manfaat mengganti mentega dengan VCO dalam resep kue dan roti"
+          )
+          TOTAL_TOPICS=${#TOPICS[@]}
+
+          # ============================================================
+          # Step 1: Get existing titles from Supabase
+          # ============================================================
+          echo "Fetching existing blog posts..."
+          EXISTING=$(curl -s "${SUPABASE_URL}/rest/v1/vco_blog_posts?select=title&source=eq.ai&order=published_at.desc&limit=${TOTAL_TOPICS}" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")
+
+          EXISTING_TITLES=$(echo "$EXISTING" | jq -r '.[].title' 2>/dev/null || echo "")
+          EXISTING_COUNT=$(echo "$EXISTING" | jq 'length' 2>/dev/null || echo "0")
+          echo "Found $EXISTING_COUNT existing posts"
+
+          # ============================================================
+          # Step 2: Pick an unused topic
+          # ============================================================
+          SELECTED_TOPIC=""
+          for topic in "${TOPICS[@]}"; do
+            # Extract key words (4+ chars) from topic
+            TOPIC_LOWER=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[:()?]//g')
+            MATCH_FOUND=false
+
+            while IFS= read -r existing_title; do
+              [ -z "$existing_title" ] && continue
+              TITLE_LOWER=$(echo "$existing_title" | tr '[:upper:]' '[:lower:]')
+
+              # Count how many significant words from the topic appear in the title
+              MATCH_COUNT=0
+              WORD_COUNT=0
+              for word in $TOPIC_LOWER; do
+                [ ${#word} -le 3 ] && continue
+                WORD_COUNT=$((WORD_COUNT + 1))
+                if echo "$TITLE_LOWER" | grep -q "$word"; then
+                  MATCH_COUNT=$((MATCH_COUNT + 1))
+                fi
+              done
+
+              # If 50%+ words match, consider this topic used
+              if [ "$WORD_COUNT" -gt 0 ]; then
+                THRESHOLD=$(( (WORD_COUNT + 1) / 2 ))
+                if [ "$MATCH_COUNT" -ge "$THRESHOLD" ]; then
+                  MATCH_FOUND=true
+                  break
+                fi
+              fi
+            done <<< "$EXISTING_TITLES"
+
+            if [ "$MATCH_FOUND" = false ]; then
+              SELECTED_TOPIC="$topic"
+              break
+            fi
+          done
+
+          # Fallback: cycle through topics
+          if [ -z "$SELECTED_TOPIC" ]; then
+            INDEX=$((EXISTING_COUNT % TOTAL_TOPICS))
+            SELECTED_TOPIC="${TOPICS[$INDEX]}"
+          fi
+
+          echo "Selected topic: $SELECTED_TOPIC"
+
+          # Build list of existing titles for GPT prompt
+          TITLE_LIST=""
+          while IFS= read -r t; do
+            [ -z "$t" ] && continue
+            TITLE_LIST="${TITLE_LIST}- ${t}\n"
+          done <<< "$(echo "$EXISTING_TITLES" | head -10)"
+
+          # ============================================================
+          # Step 3: Generate article content with GPT-4o-mini
+          # ============================================================
+          echo "Generating article content..."
+
+          SYSTEM_PROMPT='Kamu adalah penulis konten ahli tentang Virgin Coconut Oil (VCO) dari brand Barooka di Indonesia.
+          Website resmi: virgincoconutoil.id
+          Nama brand: Barooka Virgin Coconut Oil
+
+          PENTING: Jika menyebutkan website atau URL, SELALU gunakan "virgincoconutoil.id". JANGAN PERNAH menyebutkan nama website lain atau nama website fiktif.
+
+          Tulis artikel dalam Bahasa Indonesia yang informatif dan SEO-friendly tentang topik yang diberikan.
+
+          FOKUS KONTEN (pilih salah satu sesuai topik):
+          - KESEHATAN: manfaat VCO untuk kesehatan tubuh, imunitas, pencernaan, jantung, dll.
+          - KECANTIKAN: manfaat VCO untuk perawatan kulit, rambut, skincare alami, dll.
+          - MASAKAN: resep dan tips memasak sehat menggunakan VCO sebagai bahan utama.
+
+          Pastikan artikel selalu menghubungkan manfaat dengan penggunaan VCO secara praktis.
+
+          ATURAN FORMAT HTML:
+          - Setiap paragraf HARUS dibungkus tag <p></p>
+          - Setiap <p> berisi 2-4 kalimat maksimum
+          - Gunakan <h2> untuk section utama, <h3> untuk sub-section
+          - Gunakan <strong> dan <em> (BUKAN markdown ** atau *)
+          - JANGAN gunakan <br> untuk paragraf — gunakan <p> terpisah
+          - Tulis minimal 800 kata
+
+          Kembalikan HANYA JSON object (tanpa markdown code block):
+          {
+            "title": "Judul artikel yang menarik dan SEO-friendly",
+            "metaDescription": "Deskripsi meta 150-160 karakter",
+            "excerpt": "Ringkasan 2-3 kalimat",
+            "content": "Konten HTML lengkap artikel",
+            "keywords": ["keyword1", "keyword2", "keyword3"],
+            "tags": ["tag1", "tag2"],
+            "slug": "url-friendly-slug-tanpa-spasi",
+            "category": "Kesehatan | Kecantikan | Masakan",
+            "imagePrompt": "Tulis prompt DALL-E 3 dalam bahasa Inggris untuk gambar featured blog. BRAND STYLE GUIDE (WAJIB KONSISTEN): (1) Gaya: food photography profesional, clean dan bright, flat lay atau 45-degree angle. (2) Warna: warm golden tones, cream, soft green — palette kelapa tropis dan natural. (3) Pencahayaan: natural soft light dari samping, golden hour feel. (4) Background: bersih dan minimalis — marble putih, kayu natural, linen, cutting board, atau dapur modern. (5) Komposisi: rule of thirds, shallow depth of field dengan bokeh lembut. SUBJEK WAJIB: Minyak kelapa (coconut oil) dalam botol kaca bening atau jar, dikombinasikan dengan bahan-bahan segar yang BERVARIASI sesuai topik. Contoh variasi: (a) kesehatan - botol coconut oil dengan buah kelapa belah, daun mint, irisan lemon, kacang-kacangan; (b) kecantikan - jar coconut oil dengan bunga tropis, lavender, irisan mentimun, madu; (c) masakan - botol coconut oil dikelilingi sayuran segar (paprika, brokoli, wortel, tomat), rempah-rempah, herbs segar, bawang putih. Setiap gambar HARUS berbeda komposisi dan kombinasi bahan. LARANGAN KETAT: (1) JANGAN ada teks, tulisan, label, watermark. (2) JANGAN gambar orang/manusia. (3) JANGAN gambar produk dengan label/brand. (4) JANGAN gambar hewan."
+          }'
+
+          USER_MSG="Tulis artikel lengkap tentang: ${SELECTED_TOPIC}"
+          if [ -n "$TITLE_LIST" ]; then
+            USER_MSG="${USER_MSG}\n\nJudul yang SUDAH ADA (JANGAN buat judul serupa):\n${TITLE_LIST}\nBuat judul yang BERBEDA dan UNIK."
+          fi
+
+          # Build JSON payload using jq to avoid escaping issues
+          PAYLOAD=$(jq -n \
+            --arg system "$SYSTEM_PROMPT" \
+            --arg user "$USER_MSG" \
+            '{
+              model: "gpt-4o-mini",
+              messages: [
+                { role: "system", content: $system },
+                { role: "user", content: $user }
+              ],
+              temperature: 0.8,
+              response_format: { type: "json_object" }
+            }')
+
+          CONTENT_RESPONSE=$(curl -s --max-time 60 -X POST "https://api.openai.com/v1/chat/completions" \
+            -H "Authorization: Bearer ${OPENAI_API_KEY}" \
             -H "Content-Type: application/json" \
-            -d '{}')
+            -d "$PAYLOAD")
 
-          http_code=$(echo "$response" | tail -1)
-          body=$(echo "$response" | head -n -1)
+          # Extract the content from the response
+          RAW_CONTENT=$(echo "$CONTENT_RESPONSE" | jq -r '.choices[0].message.content // empty')
 
-          echo "HTTP Status: $http_code"
-          echo "Response: $body"
-
-          if [ "$http_code" -ge 400 ]; then
-            echo "Function call failed!"
+          if [ -z "$RAW_CONTENT" ]; then
+            echo "ERROR: Failed to generate content"
+            echo "Response: $CONTENT_RESPONSE"
             exit 1
           fi
+
+          echo "Content generated successfully"
+
+          # Parse the blog data
+          BLOG_TITLE=$(echo "$RAW_CONTENT" | jq -r '.title')
+          BLOG_SLUG=$(echo "$RAW_CONTENT" | jq -r '.slug')
+          BLOG_EXCERPT=$(echo "$RAW_CONTENT" | jq -r '.excerpt')
+          BLOG_META_DESC=$(echo "$RAW_CONTENT" | jq -r '.metaDescription')
+          BLOG_CATEGORY=$(echo "$RAW_CONTENT" | jq -r '.category // "Edukasi"')
+          BLOG_IMAGE_PROMPT=$(echo "$RAW_CONTENT" | jq -r '.imagePrompt // empty')
+          UNIQUE_SLUG="${BLOG_SLUG}-$(date +%s)"
+
+          # Calculate word count and reading time
+          PLAIN_TEXT=$(echo "$RAW_CONTENT" | jq -r '.content' | sed 's/<[^>]*>//g')
+          WORD_COUNT=$(echo "$PLAIN_TEXT" | wc -w | tr -d ' ')
+          READING_TIME=$(( (WORD_COUNT + 199) / 200 ))
+
+          echo "Title: $BLOG_TITLE"
+          echo "Words: $WORD_COUNT, Reading time: ${READING_TIME} min"
+
+          # ============================================================
+          # Step 4: Insert blog post (without image first)
+          # ============================================================
+          echo "Inserting blog post..."
+
+          INSERT_PAYLOAD=$(echo "$RAW_CONTENT" | jq \
+            --arg slug "$UNIQUE_SLUG" \
+            --arg category "$BLOG_CATEGORY" \
+            --argjson word_count "$WORD_COUNT" \
+            --argjson reading_time "$READING_TIME" \
+            --arg published_at "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)" \
+            '{
+              title: .title,
+              slug: $slug,
+              content_html: .content,
+              excerpt: .excerpt,
+              meta_title: .title,
+              meta_description: .metaDescription,
+              keywords: .keywords,
+              tags: .tags,
+              category: $category,
+              word_count: $word_count,
+              reading_time_minutes: $reading_time,
+              featured_image_url: null,
+              og_image_url: null,
+              status: "published",
+              source: "ai",
+              published_at: $published_at
+            }')
+
+          INSERT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${SUPABASE_URL}/rest/v1/vco_blog_posts" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d "$INSERT_PAYLOAD")
+
+          INSERT_HTTP=$(echo "$INSERT_RESPONSE" | tail -1)
+          INSERT_BODY=$(echo "$INSERT_RESPONSE" | head -n -1)
+
+          if [ "$INSERT_HTTP" -ge 400 ]; then
+            echo "ERROR: Failed to insert blog post (HTTP $INSERT_HTTP)"
+            echo "Response: $INSERT_BODY"
+            exit 1
+          fi
+
+          POST_ID=$(echo "$INSERT_BODY" | jq -r '.[0].id // .id // empty')
+          echo "Blog post inserted: $BLOG_TITLE (ID: $POST_ID)"
+
+          # ============================================================
+          # Step 5: Generate image with DALL-E 3 and update post
+          # ============================================================
+          if [ -n "$BLOG_IMAGE_PROMPT" ]; then
+            echo "Generating blog image with DALL-E 3..."
+
+            IMAGE_PROMPT="${BLOG_IMAGE_PROMPT}. MANDATORY STYLE: professional food photography, warm golden color palette with cream and soft green tones, natural soft side lighting with golden hour feel, clean minimalist background, shallow depth of field with soft bokeh, 16:9 landscape, ultra high quality. NO text, NO labels, NO words, NO watermarks anywhere. NO people. Must feature coconut oil bottle/jar with fresh vegetables, fruits, herbs, or tropical ingredients as subjects."
+
+            IMAGE_PAYLOAD=$(jq -n \
+              --arg prompt "$IMAGE_PROMPT" \
+              '{
+                model: "dall-e-3",
+                prompt: $prompt,
+                n: 1,
+                size: "1792x1024",
+                response_format: "b64_json"
+              }')
+
+            IMAGE_RESPONSE=$(curl -s --max-time 120 -X POST "https://api.openai.com/v1/images/generations" \
+              -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+              -H "Content-Type: application/json" \
+              -d "$IMAGE_PAYLOAD")
+
+            B64_DATA=$(echo "$IMAGE_RESPONSE" | jq -r '.data[0].b64_json // empty')
+
+            if [ -n "$B64_DATA" ]; then
+              echo "Image generated, uploading to Supabase Storage..."
+
+              FILE_NAME="blog-$(date +%s)-$(head /dev/urandom | tr -dc a-z0-9 | head -c 6).png"
+
+              # Decode base64 and upload
+              echo "$B64_DATA" | base64 -d > /tmp/blog_image.png
+
+              UPLOAD_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+                "${SUPABASE_URL}/storage/v1/object/blog-images/${FILE_NAME}" \
+                -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+                -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+                -H "Content-Type: image/png" \
+                --data-binary @/tmp/blog_image.png)
+
+              UPLOAD_HTTP=$(echo "$UPLOAD_RESPONSE" | tail -1)
+
+              if [ "$UPLOAD_HTTP" -lt 400 ]; then
+                IMAGE_URL="${SUPABASE_URL}/storage/v1/object/public/blog-images/${FILE_NAME}"
+                echo "Image uploaded: $IMAGE_URL"
+
+                # Update post with image
+                curl -s -X PATCH \
+                  "${SUPABASE_URL}/rest/v1/vco_blog_posts?id=eq.${POST_ID}" \
+                  -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+                  -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"featured_image_url\": \"${IMAGE_URL}\", \"og_image_url\": \"${IMAGE_URL}\"}" > /dev/null
+
+                echo "Post updated with image"
+              else
+                echo "Image upload failed (HTTP $UPLOAD_HTTP), post published without image"
+              fi
+
+              rm -f /tmp/blog_image.png
+            else
+              echo "Image generation failed, post published without image"
+            fi
+          fi
+
+          echo ""
+          echo "=== SUCCESS ==="
+          echo "Title: $BLOG_TITLE"
+          echo "Slug: $UNIQUE_SLUG"
+          echo "Category: $BLOG_CATEGORY"
