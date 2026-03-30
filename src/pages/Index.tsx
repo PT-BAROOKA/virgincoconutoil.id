@@ -20,6 +20,7 @@ const Index = () => {
       <ContactSection />
       <Footer />
       <FloatingWhatsApp />
+      <FloatingChatbot />
       <LeadCapturePopup />
     </div>
   );
