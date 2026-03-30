@@ -49,7 +49,7 @@ export const useBlogPost = (slug: string) => {
     queryKey: ["blog-post", slug],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("vco_blog_posts")
+        .from("blog_posts")
         .select("*")
         .eq("slug", slug)
         .eq("status", "published")
