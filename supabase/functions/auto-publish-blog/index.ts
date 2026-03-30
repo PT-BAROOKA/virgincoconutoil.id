@@ -208,7 +208,7 @@ serve(async (req) => {
 
     // Smart topic rotation — match by title similarity to avoid duplicates
     const { data: existingPosts } = await supabase
-      .from('vco_blog_posts')
+      .from('blog_posts')
       .select('title')
       .eq('source', 'ai')
       .order('published_at', { ascending: false })
@@ -256,7 +256,7 @@ serve(async (req) => {
 
     // Step 2: Insert blog post FIRST (without image) to avoid timeout
     const { data: blogPost, error } = await supabase
-      .from('vco_blog_posts')
+      .from('blog_posts')
       .insert({
         title: blogData.title,
         slug,
@@ -291,7 +291,7 @@ serve(async (req) => {
         const featuredImageUrl = await generateBlogImage(blogData.imagePrompt);
         if (featuredImageUrl) {
           await supabase
-            .from('vco_blog_posts')
+            .from('blog_posts')
             .update({ featured_image_url: featuredImageUrl, og_image_url: featuredImageUrl })
             .eq('id', blogPost.id);
           console.log('Image added to post:', featuredImageUrl);
