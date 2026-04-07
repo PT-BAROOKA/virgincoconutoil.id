@@ -10,18 +10,21 @@ const retailProducts = [
   {
     image: vco250ml,
     title: "VCO Barooka 250ml",
+    price: "Rp 38.999",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
     waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 250ml. Bisa info harga dan cara pemesanannya?",
   },
   {
     image: vcoBulk2,
     title: "VCO Barooka 500ml",
+    price: "Rp 70.999",
     desc: "Ukuran keluarga untuk kebutuhan memasak sehari-hari. Minyak kelapa murni cold-pressed yang menjaga cita rasa masakan Anda.",
     waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 500ml. Bisa info harga dan cara pemesanannya?",
   },
   {
     image: vcoBulk3,
     title: "VCO Barooka 1 Liter",
+    price: "Rp 131.999",
     desc: "Ukuran hemat untuk kebutuhan keluarga atau usaha kecil. Minyak kelapa murni berkualitas tinggi dengan harga terbaik per mililiter.",
     waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 1 Liter. Bisa info harga dan cara pemesanannya?",
   },
@@ -118,7 +121,8 @@ const ProductsSection = () => {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-display font-semibold text-foreground mb-2">{p.title}</h3>
+                <h3 className="text-xl font-display font-semibold text-foreground mb-1">{p.title}</h3>
+                <p className="text-lg font-display font-bold text-accent mb-2">{p.price}</p>
                 <p className="text-sm font-body text-muted-foreground mb-4 leading-relaxed">{p.desc}</p>
                 <div className="flex items-center justify-center">
                   <a

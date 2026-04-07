@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Katalog Virgin Coconut Oil — PT. Barooka Global Indonesia</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #1a1a1a;
+      background: #f5f5f0;
+    }
+
+    /* ===== PAGE ===== */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 20px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; page-break-after: always; }
+      .page:last-child { page-break-after: avoid; }
+    }
+
+    /* ===== COLORS ===== */
+    :root {
+      --green-dark: #1C3D2D;
+      --green-mid: #2D5A3F;
+      --green-light: #4A8A5E;
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --cream: #F7F5EF;
+      --cream-dark: #EDE8DC;
+    }
+
+    /* ===== HEADER (semua halaman) ===== */
+    .page-header {
+      background: var(--green-dark);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-header .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-box {
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--gold);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-box span {
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .page-header .company-name {
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .page-header .year-badge {
+      color: var(--gold-light);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    /* ===== FOOTER (semua halaman) ===== */
+    .page-footer {
+      background: var(--green-dark);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .page-footer .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .page-footer .footer-logo-box {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--gold);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page-footer .footer-logo-box span {
+      color: var(--gold);
+      font-size: 6px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .page-footer .footer-text {
+      color: rgba(255,255,255,0.7);
+      font-size: 9px;
+    }
+    .page-footer .footer-text strong {
+      color: var(--gold-light);
+    }
+
+    /* ===========================
+       HALAMAN 1 — COVER
+    =========================== */
+    .page-1 .body-area {
+      flex: 1;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 32px 28px;
+    }
+
+    /* Bintang */
+    .stars {
+      color: var(--gold);
+      font-size: 22px;
+      letter-spacing: 6px;
+      margin-bottom: 6px;
+    }
+    .premium-tag-label {
+      color: var(--green-dark);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* Kategori pill */
+    .category-pill {
+      background: var(--green-dark);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .category-pill::before { content: "•"; }
+
+    /* Judul produk */
+    .product-title {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--green-dark);
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-family: Georgia, serif;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-underline-offset: 4px;
+    }
+    .product-title span {
+      text-decoration: line-through;
+      text-decoration-color: var(--gold);
+    }
+    .product-subtitle {
+      font-size: 13px;
+      color: var(--green-mid);
+      font-style: italic;
+      margin-bottom: 22px;
+    }
+
+    /* Product image box */
+    .product-image-wrapper {
+      background: var(--cream-dark);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 26px;
+      width: 100%;
+      max-width: 300px;
+    }
+    .product-image-wrapper img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      display: block;
+    }
+    .product-image-wrapper .img-placeholder {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-dark) 100%);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .product-image-wrapper .img-placeholder .vco-icon {
+      font-size: 56px;
+      margin-bottom: 8px;
+    }
+    .product-image-wrapper .img-placeholder p {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    /* Keunggulan grid */
+    .keunggulan-box {
+      background: var(--green-dark);
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .keunggulan-title {
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .keunggulan-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+    .keunggulan-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .keunggulan-item .check {
+      color: var(--gold);
+      font-size: 14px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .keunggulan-item p {
+      color: #fff;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    /* Deskripsi singkat */
+    .desc-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px 20px;
+      width: 100%;
+      border: 1px solid var(--cream-dark);
+    }
+    .desc-box p {
+      color: var(--green-dark);
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .desc-box .tagline {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* Sertifikasi */
+    .cert-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .cert-badge {
+      background: var(--green-dark);
+      color: var(--gold-light);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--gold);
+    }
+
+    /* ===========================
+       HALAMAN 2 — HARGA
+    =========================== */
+    .page-2 .body-area {
+      flex: 1;
+      padding: 0;
+    }
+
+    .price-header {
+      background: var(--green-dark);
+      text-align: center;
+      padding: 18px;
+    }
+    .price-header h2 {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .price-section {
+      padding: 20px 28px 0;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .section-label .bar {
+      width: 4px;
+      height: 20px;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+    .section-label h3 {
+      color: var(--green-dark);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .section-label p {
+      color: #666;
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .price-table thead tr {
+      background: var(--green-mid);
+    }
+    .price-table thead th {
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 10px 14px;
+      text-align: left;
+      letter-spacing: 0.5px;
+    }
+    .price-table thead th:last-child {
+      text-align: right;
+    }
+    .price-table tbody tr {
+      background: #fff;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .price-table tbody tr:nth-child(even) {
+      background: var(--cream);
+    }
+    .price-table tbody td {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--green-dark);
+    }
+    .price-table tbody td.price {
+      text-align: right;
+      font-weight: 800;
+      color: var(--green-dark);
+      font-size: 13px;
+    }
+
+    .table-note {
+      font-size: 9px;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+    .table-note strong { color: var(--gold); }
+
+    /* Harga eceran — 2 kolom */
+    .price-table-eceran {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .price-table-eceran thead tr {
+      background: #C9A84C;
+    }
+    .price-table-eceran thead th {
+      color: var(--green-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 10px 14px;
+      text-align: left;
+      letter-spacing: 0.5px;
+    }
+    .price-table-eceran thead th:last-child { text-align: right; }
+    .price-table-eceran tbody tr { background: #fff; border-bottom: 1px solid var(--cream-dark); }
+    .price-table-eceran tbody tr:nth-child(even) { background: var(--cream); }
+    .price-table-eceran tbody td { padding: 10px 14px; font-size: 12px; color: var(--green-dark); }
+    .price-table-eceran tbody td.price { text-align: right; font-weight: 800; font-size: 13px; color: #C9A84C; }
+
+    /* Bottom info boxes */
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 16px 28px 20px;
+    }
+    .info-card {
+      background: var(--green-dark);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .info-card .info-title {
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .info-card .info-body {
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .info-card .info-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 9px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .maklon-card {
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 14px 16px;
+      border: 2px solid var(--gold);
+    }
+    .maklon-card .maklon-title {
+      color: var(--green-dark);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .maklon-card .maklon-title span {
+      color: var(--gold);
+    }
+    .maklon-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .maklon-list li {
+      font-size: 9.5px;
+      color: var(--green-dark);
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .maklon-list li::before { content: "◆"; color: var(--gold); font-size: 8px; margin-top: 1px; }
+
+    .footer-note {
+      text-align: center;
+      color: #888;
+      font-size: 9px;
+      font-style: italic;
+      padding: 8px 28px 12px;
+    }
+
+    /* ===========================
+       HALAMAN 3 — CARA PEMESANAN
+    =========================== */
+    .page-3 .body-area {
+      flex: 1;
+      padding: 0;
+    }
+
+    .order-header {
+      background: var(--green-dark);
+      text-align: center;
+      padding: 18px;
+    }
+    .order-header h2 {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .steps-area {
+      padding: 22px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--green-dark);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-num.outline {
+      background: #fff;
+      border: 2px solid var(--green-dark);
+      color: var(--green-dark);
+    }
+    .step-content {
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--cream-dark);
+      flex: 1;
+    }
+    .step-content h4 {
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .step-content p {
+      color: #666;
+      font-size: 10.5px;
+      line-height: 1.5;
+    }
+
+    /* CTA contact */
+    .cta-box {
+      margin: 6px 28px;
+      background: var(--green-dark);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: "★  HUBUNGI KAMI SEKARANG  ★";
+      display: block;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      margin-bottom: 14px;
+    }
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0;
+    }
+    .cta-col {
+      padding: 0 20px;
+    }
+    .cta-divider {
+      background: rgba(255,255,255,0.2);
+    }
+    .cta-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .cta-value {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .cta-value.gold { color: var(--gold-light); }
+
+    /* Keuntungan */
+    .benefit-box {
+      margin: 14px 28px;
+      border: 1px solid var(--cream-dark);
+      border-radius: 10px;
+      padding: 16px 20px;
+      background: var(--cream);
+    }
+    .benefit-title {
+      text-align: center;
+      color: var(--green-dark);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .benefit-item .check {
+      color: var(--green-dark);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .benefit-item p {
+      color: var(--green-dark);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    /* Company info */
+    .company-box {
+      margin: 10px 28px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+    .company-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .company-logo-box {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green-dark);
+      flex-shrink: 0;
+    }
+    .company-logo-box span {
+      color: var(--gold);
+      font-size: 7px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .company-text h4 {
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .company-text p {
+      color: #666;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .service-badges {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+    .service-badge {
+      background: var(--cream);
+      border: 1.5px solid var(--green-dark);
+      border-radius: 6px;
+      padding: 6px 12px;
+      text-align: center;
+    }
+    .service-badge .badge-label {
+      color: #888;
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .service-badge .badge-value {
+      color: var(--green-dark);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===========================
+     HALAMAN 1 — COVER
+=========================== -->
+<div class="page page-1">
+  <div class="page-header">
+    <div class="logo-area">
+      <div class="logo-box">
+        <span>BAR<br>OOK<br>A</span>
+      </div>
+    </div>
+    <div class="company-name">PT. Barooka Global Indonesia</div>
+  </div>
+
+  <div class="body-area">
+    <div class="stars">★★★★★</div>
+    <div class="premium-tag-label">Produk Premium Indonesia</div>
+
+    <div class="category-pill">Minyak Kelapa</div>
+
+    <div class="product-title">Virgin<br>Coconut Oil</div>
+    <div class="product-subtitle">Minyak kelapa murni cold-pressed berkualitas premium</div>
+
+    <div class="product-image-wrapper">
+      <div class="img-placeholder">
+        <div class="vco-icon">🥥</div>
+        <p>VCO BAROOKA<br>Cold-Pressed</p>
+      </div>
+    </div>
+
+    <div class="keunggulan-box">
+      <div class="keunggulan-title">Keunggulan Produk</div>
+      <div class="keunggulan-grid">
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>100% Murni, Tanpa Campuran & Tanpa Pengawet</p>
+        </div>
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>Tinggi Asam Laurat (Lauric Acid)</p>
+        </div>
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>Sertifikasi BPOM & Halal Terdaftar</p>
+        </div>
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>Layanan Maklon / Private Label Tersedia</p>
+        </div>
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>Cold-Pressed — Tanpa Pemanasan Tinggi</p>
+        </div>
+        <div class="keunggulan-item">
+          <span class="check">✔</span>
+          <p>Pengiriman ke Seluruh Indonesia</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-box">
+      <p>
+        VCO Barooka diolah dari kelapa segar pilihan menggunakan metode cold-pressed,
+        menjaga kandungan nutrisi alami tetap utuh. Cocok untuk konsumsi harian, masakan sehat,
+        dan perawatan kulit &amp; rambut secara alami.
+      </p>
+      <div class="tagline">100% Alami &nbsp;•&nbsp; Tanpa Bahan Kimia &nbsp;•&nbsp; Aman &amp; Terpercaya</div>
+    </div>
+
+    <div class="cert-row">
+      <div class="cert-badge">BPOM</div>
+      <div class="cert-badge">HALAL</div>
+      <div class="cert-badge">COLD-PRESSED</div>
+      <div class="cert-badge">KUALITAS EKSPOR</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left">
+      <div class="footer-logo-box"><span>BAR<br>OOK<br>A</span></div>
+    </div>
+    <div class="footer-text">© 2026 PT. Barooka Global Indonesia &nbsp;|&nbsp; <strong>virgincoconutoil.id</strong> &nbsp;|&nbsp; WA: 0856-4748-6700</div>
+  </div>
+</div>
+
+
+<!-- ===========================
+     HALAMAN 2 — DAFTAR HARGA
+=========================== -->
+<div class="page page-2">
+  <div class="page-header">
+    <div class="logo-area">
+      <div class="logo-box"><span>BAR<br>OOK<br>A</span></div>
+    </div>
+    <div class="company-name">PT. Barooka Global Indonesia</div>
+    <div class="year-badge">Harga Update: 2026</div>
+  </div>
+
+  <div class="body-area">
+    <div class="price-header">
+      <h2>Daftar Harga Grosir</h2>
+    </div>
+
+    <!-- HARGA CURAH -->
+    <div class="price-section">
+      <div class="section-label">
+        <div class="bar"></div>
+        <div>
+          <h3>Harga Curah</h3>
+          <p>Tanpa kemasan — langsung dari produksi</p>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Volume</th>
+            <th style="text-align:right">Harga / Paket</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 Liter</td>
+            <td class="price">Rp 100.500</td>
+          </tr>
+          <tr>
+            <td>5 Liter</td>
+            <td class="price">Rp 502.500</td>
+          </tr>
+          <tr>
+            <td>10 Liter</td>
+            <td class="price">Rp 1.005.000</td>
+          </tr>
+          <tr>
+            <td>20 Liter</td>
+            <td class="price">Rp 2.010.000</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-note">
+        * Harga sudah termasuk margin &nbsp;•&nbsp; Minimum order: <strong>1 Liter</strong> untuk pembelian curah
+      </div>
+    </div>
+
+    <!-- HARGA DENGAN PACKAGING -->
+    <div class="price-section">
+      <div class="section-label">
+        <div class="bar"></div>
+        <div>
+          <h3>Harga dengan Packaging</h3>
+          <p>Termasuk botol/jerigen + stiker label</p>
+        </div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Kemasan</th>
+            <th style="text-align:right">Harga / Unit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 Liter (Botol + Stiker)</td>
+            <td class="price">Rp 194.500</td>
+          </tr>
+          <tr>
+            <td>5 Liter (Jerigen + Stiker)</td>
+            <td class="price">Rp 875.375</td>
+          </tr>
+          <tr>
+            <td>10 Liter (Jerigen + Stiker)</td>
+            <td class="price">Rp 1.761.250</td>
+          </tr>
+          <tr>
+            <td>20 Liter (Jerigen + Stiker)</td>
+            <td class="price">Rp 3.454.167</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-note">* Harga dapat berubah sewaktu-waktu &nbsp;•&nbsp; Hubungi kami untuk penawaran khusus volume besar</div>
+    </div>
+
+    <!-- HARGA ECERAN -->
+    <div class="price-section">
+      <div class="section-label">
+        <div class="bar" style="background:#C9A84C"></div>
+        <div>
+          <h3>Harga Eceran</h3>
+          <p>Via marketplace / penjualan langsung</p>
+        </div>
+      </div>
+
+      <table class="price-table-eceran">
+        <thead>
+          <tr>
+            <th>Kemasan</th>
+            <th style="text-align:right">Harga Jual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>100 ml</td>
+            <td class="price">Rp 25.999</td>
+          </tr>
+          <tr>
+            <td>250 ml</td>
+            <td class="price">Rp 38.999</td>
+          </tr>
+          <tr>
+            <td>500 ml</td>
+            <td class="price">Rp 70.999</td>
+          </tr>
+          <tr>
+            <td>1 Liter</td>
+            <td class="price">Rp 131.999</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-note">* Harga marketplace &nbsp;•&nbsp; Diskon tersedia saat event promo</div>
+    </div>
+  </div>
+
+  <!-- Info boxes -->
+  <div class="info-row">
+    <div class="info-card">
+      <div class="info-title">Minimum Order</div>
+      <div class="info-body">Min. 1 Liter<br>untuk pembelian curah</div>
+    </div>
+    <div class="maklon-card">
+      <div class="maklon-title">🏭 Layanan Maklon — <span>Buat Brand Sendiri!</span></div>
+      <ul class="maklon-list">
+        <li>Produksi dengan label &amp; kemasan Anda</li>
+        <li>Pengajuan izin PIRT &amp; BPOM</li>
+        <li>Pendaftaran HAKI brand Anda</li>
+        <li>MOQ khusus — konsultasi gratis</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Pengiriman CARGO &amp; REGULAR setiap hari ke seluruh Indonesia &nbsp;•&nbsp; Harga dapat berubah sewaktu-waktu
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left">
+      <div class="footer-logo-box"><span>BAR<br>OOK<br>A</span></div>
+    </div>
+    <div class="footer-text">© 2026 PT. Barooka Global Indonesia &nbsp;|&nbsp; <strong>virgincoconutoil.id</strong> &nbsp;|&nbsp; WA: 0856-4748-6700</div>
+  </div>
+</div>
+
+
+<!-- ===========================
+     HALAMAN 3 — CARA PEMESANAN
+=========================== -->
+<div class="page page-3">
+  <div class="page-header">
+    <div class="logo-area">
+      <div class="logo-box"><span>BAR<br>OOK<br>A</span></div>
+    </div>
+    <div class="company-name">PT. Barooka Global Indonesia</div>
+  </div>
+
+  <div class="body-area">
+    <div class="order-header">
+      <h2>Cara Pemesanan</h2>
+    </div>
+
+    <div class="steps-area">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Hubungi Kami</h4>
+          <p>Chat via WhatsApp untuk konsultasi produk, cek harga, dan ketersediaan stok.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num outline">2</div>
+        <div class="step-content">
+          <h4>Pilih Produk &amp; Kemasan</h4>
+          <p>Tentukan jenis kemasan (curah / packaging / eceran) dan jumlah pesanan.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Konfirmasi Order</h4>
+          <p>Dapatkan detail total harga termasuk ongkos kirim ke lokasi Anda.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num outline">4</div>
+        <div class="step-content">
+          <h4>Pembayaran</h4>
+          <p>Transfer ke rekening resmi perusahaan setelah mendapat konfirmasi order.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Proses &amp; Pengiriman</h4>
+          <p>Pesanan dikemas dan dikirim ke seluruh Indonesia via CARGO atau REGULAR.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <div class="cta-grid">
+        <div class="cta-col">
+          <div class="cta-label">WhatsApp</div>
+          <div class="cta-value">0856-4748-6700</div>
+        </div>
+        <div class="cta-divider"></div>
+        <div class="cta-col">
+          <div class="cta-label">Website</div>
+          <div class="cta-value gold">virgincoconutoil.id</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="benefit-box">
+      <div class="benefit-title">Keuntungan Order di PT. Barooka Global Indonesia</div>
+      <div class="benefit-grid">
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>Langsung dari pabrik, harga lebih murah</p>
+        </div>
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>100% alami, tanpa bahan kimia berbahaya</p>
+        </div>
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>Pengiriman CARGO &amp; REGULAR seluruh Indonesia</p>
+        </div>
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>Support invoice PPN maupun non-PPN</p>
+        </div>
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>Layanan Maklon, pengajuan PIRT, BPOM &amp; HAKI</p>
+        </div>
+        <div class="benefit-item">
+          <span class="check">✔</span>
+          <p>Konsultasi gratis, stok selalu tersedia</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="company-box">
+      <div class="company-info">
+        <div class="company-logo-box">
+          <span>BAR<br>OOK<br>A</span>
+        </div>
+        <div class="company-text">
+          <h4>PT. Barooka Global Indonesia</h4>
+          <p>Gudang &amp; Pengiriman: Tangerang Selatan, Banten<br>
+          Email: info@virgincoconutoil.id &nbsp;|&nbsp; BPOM &amp; Halal Terdaftar</p>
+        </div>
+      </div>
+      <div class="service-badges">
+        <div class="service-badge">
+          <div class="badge-label">Layanan</div>
+          <div class="badge-value">BPOM • HALAL</div>
+        </div>
+        <div class="service-badge">
+          <div class="badge-label">Sertifikasi</div>
+          <div class="badge-value">MAKLON • B2B</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left">
+      <div class="footer-logo-box"><span>BAR<br>OOK<br>A</span></div>
+    </div>
+    <div class="footer-text">© 2026 PT. Barooka Global Indonesia &nbsp;|&nbsp; <strong>virgincoconutoil.id</strong> &nbsp;|&nbsp; WA: 0856-4748-6700</div>
+  </div>
+</div>
+
+</body>
+</html>

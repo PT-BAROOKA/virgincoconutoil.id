@@ -39,7 +39,7 @@ const HeroSection = () => {
           className="inline-block bg-accent/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8 animate-fade-in-up"
           style={{ animationDelay: "0.3s" }}
         >
-          <span className="text-gold font-body font-semibold text-sm">Mulai dari Rp 105.000 / liter</span>
+          <span className="text-gold font-body font-semibold text-sm">Mulai dari Rp 100.500 / liter</span>
         </div>
 
         <div
