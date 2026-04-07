@@ -62,35 +62,31 @@ const FloatingChatbot = () => {
 
   return (
     <>
-      {/* Chat Window */}
       {open && (
-        <div
-          className="fixed bottom-28 right-4 z-50 w-[calc(100vw-2rem)] sm:w-[480px] h-[75vh] max-h-[600px] bg-card rounded-2xl overflow-hidden flex flex-col"
-          style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.18)" }}
-        >
+        <div className="fixed bottom-24 right-6 z-50 w-[370px] max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border border-border bg-card flex flex-col overflow-hidden" style={{ height: 520 }}>
           {/* Header */}
-          <div className="bg-primary px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
             <div className="flex items-center gap-3">
-              <Bot className="w-7 h-7 text-primary-foreground" />
+              <Bot size={28} />
               <div>
-                <p className="font-display text-lg font-semibold text-primary-foreground">Barooka VCO AI</p>
-                <p className="text-sm text-primary-foreground/70">Asisten Virtual</p>
+                <p className="font-display font-bold text-sm leading-tight">Barooka VCO AI</p>
+                <p className="text-xs opacity-80 font-body">Asisten Virtual</p>
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="text-primary-foreground/80 hover:text-primary-foreground">
-              <X className="w-6 h-6" />
+              <X size={22} />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 bg-background">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[80%] px-4 py-3 rounded-xl text-base font-body leading-relaxed ${
+                  className={`max-w-[80%] rounded-xl px-4 py-2.5 text-sm font-body whitespace-pre-wrap ${
                     msg.role === "user"
-                      ? "bg-accent text-accent-foreground rounded-br-sm"
-                      : "bg-secondary text-foreground rounded-bl-sm"
+                      ? "bg-primary text-primary-foreground rounded-br-sm"
+                      : "bg-secondary text-secondary-foreground rounded-bl-sm"
                   }`}
                 >
                   {msg.content}
@@ -99,8 +95,8 @@ const FloatingChatbot = () => {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-secondary text-foreground px-4 py-3 rounded-xl rounded-bl-sm text-base">
-                  <span className="animate-pulse">Mengetik...</span>
+                <div className="bg-secondary text-secondary-foreground rounded-xl px-4 py-2.5 text-sm font-body animate-pulse">
+                  Mengetik...
                 </div>
               </div>
             )}
@@ -108,9 +104,8 @@ const FloatingChatbot = () => {
           </div>
 
           {/* Input */}
-          <div className="border-t border-border p-4 flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-3 border-t border-border bg-card">
             <input
-              type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -118,27 +113,22 @@ const FloatingChatbot = () => {
               disabled={loading}
               className="flex-1 bg-background border border-border rounded-lg px-4 py-3 font-body text-base focus:outline-none focus:ring-2 focus:ring-accent/50"
             />
-            <button
-              onClick={sendMessage}
-              disabled={loading || !input.trim()}
-              className="w-11 h-11 rounded-lg bg-accent flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-50"
-            >
-              <Send className="w-5 h-5 text-accent-foreground" />
+            <button onClick={sendMessage} disabled={loading || !input.trim()} className="bg-primary text-primary-foreground rounded-lg p-3 hover:opacity-90 disabled:opacity-50 transition-opacity">
+              <Send size={20} />
             </button>
           </div>
         </div>
       )}
 
-      {/* Toggle Button — posisi di kiri WhatsApp button */}
       <button
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-24 z-50 w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
         aria-label="Chat Bot"
       >
         {open ? (
-          <X className="w-8 h-8 text-primary-foreground" />
+          <X size={28} className="text-primary-foreground" />
         ) : (
-          <MessageCircle className="w-8 h-8 text-primary-foreground" />
+          <MessageCircle size={28} className="text-primary-foreground" />
         )}
       </button>
     </>

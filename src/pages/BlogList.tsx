@@ -100,8 +100,8 @@ const BlogList = () => {
         </div>
       </main>
       <Footer />
-      <FloatingChatbot />
       <FloatingWhatsApp />
+      <FloatingChatbot />
     </div>
   );
 };

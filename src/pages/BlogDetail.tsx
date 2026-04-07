@@ -114,8 +114,8 @@ const BlogDetail = () => {
         </article>
       </main>
       <Footer />
-      <FloatingChatbot />
       <FloatingWhatsApp />
+      <FloatingChatbot />
     </div>
   );
 };

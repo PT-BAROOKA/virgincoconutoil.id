@@ -21,6 +21,7 @@ const Index = () => {
       <Footer />
       <FloatingChatbot />
       <FloatingWhatsApp />
+      <FloatingChatbot />
       <LeadCapturePopup />
     </div>
   );
