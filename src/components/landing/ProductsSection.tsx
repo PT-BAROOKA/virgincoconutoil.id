@@ -3,8 +3,31 @@ import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
 import vco250ml from "@/assets/vco-250ml.jpg";
 import { Button } from "@/components/ui/button";
+import { FileDown, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const WA_NUMBER = "6285647486700";
+
+const downloadKatalog = (setLoading: (v: boolean) => void) => {
+  setLoading(true);
+  const iframe = document.createElement("iframe");
+  iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:830px;height:1200px;opacity:0;pointer-events:none;";
+  iframe.src = "/katalog-vco.html";
+  document.body.appendChild(iframe);
+  iframe.addEventListener("load", () => {
+    setTimeout(async () => {
+      try {
+        await (iframe.contentWindow as any)?.downloadPDF?.();
+      } catch {
+        window.open("/katalog-vco.html", "_blank");
+      }
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        setLoading(false);
+      }, 500);
+    }, 1500);
+  });
+};
 
 const retailProducts = [
   {
@@ -31,6 +54,8 @@ const retailProducts = [
 ];
 
 const ProductsSection = () => {
+  const [downloading, setDownloading] = useState(false);
+
   return (
     <section id="produk" className="section-padding bg-background">
       <div className="container-main">
@@ -99,6 +124,25 @@ const ProductsSection = () => {
           <div className="h-64 md:h-auto overflow-hidden md:order-1 order-0">
             <img src={vcoBulk2} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
           </div>
+        </div>
+
+        {/* Download Katalog Banner */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-primary/5 border border-primary/20 rounded-xl px-6 py-5 mb-10">
+          <div>
+            <h3 className="font-display font-bold text-foreground text-lg">Download Katalog Harga Lengkap</h3>
+            <p className="text-sm text-muted-foreground font-body mt-0.5">Harga curah, packaging &amp; eceran dalam satu dokumen PDF</p>
+          </div>
+          <Button
+            onClick={() => downloadKatalog(setDownloading)}
+            disabled={downloading}
+            className="flex-shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 font-body font-semibold gap-2 px-6"
+          >
+            {downloading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Generating PDF...</>
+            ) : (
+              <><FileDown className="w-4 h-4" /> Download PDF</>
+            )}
+          </Button>
         </div>
 
         {/* Retail Products Grid */}
