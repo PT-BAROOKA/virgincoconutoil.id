@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
 
 const SYSTEM_PROMPT = `Kamu adalah customer service AI dari Barooka Virgin Coconut Oil (VCO).
 
@@ -39,6 +39,7 @@ MANFAAT VCO:
 ATURAN MENJAWAB:
 - Jawab dalam Bahasa Indonesia, sopan dan ramah
 - Jawaban singkat dan jelas (max 3-4 kalimat)
+- Jangan gunakan format markdown seperti **, *, #, atau simbol formatting lainnya — tulis teks biasa saja
 - Jika ditanya harga spesifik retail, arahkan ke WhatsApp: +62 856-4748-6700
 - Untuk harga curah/bulk, sebutkan mulai dari Rp 105.000/liter dan arahkan ke WhatsApp untuk detail
 - Jika pertanyaan di luar topik VCO/minyak kelapa, jawab sopan bahwa kamu hanya bisa membantu seputar produk Barooka VCO
@@ -51,15 +52,13 @@ serve(async (req) => {
   }
 
   try {
-    if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY is not configured');
+    if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY is not configured');
 
     const { message, history } = await req.json();
 
     if (!message) throw new Error('message is required');
 
-    const messages: Array<{ role: string; content: string }> = [
-      { role: 'system', content: SYSTEM_PROMPT },
-    ];
+    const messages: Array<{ role: string; content: string }> = [];
 
     if (history && Array.isArray(history)) {
       const recentHistory = history.slice(-10);
@@ -70,27 +69,28 @@ serve(async (req) => {
 
     messages.push({ role: 'user', content: message });
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages,
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 300,
-        temperature: 0.7,
+        system: SYSTEM_PROMPT,
+        messages,
       }),
     });
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(`OpenAI API error: ${response.status} - ${text}`);
+      throw new Error(`Anthropic API error: ${response.status} - ${text}`);
     }
 
     const data = await response.json();
-    const reply = data.choices[0].message.content;
+    const reply = data.content[0].text;
 
     return new Response(
       JSON.stringify({ reply }),
