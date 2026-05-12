@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
-import { useBlogPosts } from "@/hooks/useBlogPosts";
-import { Calendar, Clock, ArrowLeft } from "lucide-react";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import Navbar from "@/components/landing/Navbar";
-import Footer from "@/components/landing/Footer";
-import FloatingContact from "@/components/landing/FloatingContact";
+'use client';
 
-const BlogList = () => {
+import Link from 'next/link';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import Navbar from '@/components/landing/Navbar';
+import Footer from '@/components/landing/Footer';
+import FloatingContact from '@/components/landing/FloatingContact';
+
+export default function BlogList() {
   const { data: posts, isLoading } = useBlogPosts();
 
   return (
@@ -15,7 +17,10 @@ const BlogList = () => {
       <Navbar />
       <main className="pt-20 section-padding">
         <div className="container-main">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors"
+          >
             <ArrowLeft size={16} />
             Kembali ke Beranda
           </Link>
@@ -48,12 +53,13 @@ const BlogList = () => {
               {posts.map((post) => (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  href={`/blog/${post.slug}`}
                   className="group bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all duration-300"
-                  style={{ boxShadow: "var(--shadow-sm)" }}
+                  style={{ boxShadow: 'var(--shadow-sm)' }}
                 >
                   {post.featured_image_url && (
                     <div className="aspect-[4/3] overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={post.featured_image_url}
                         alt={post.title}
@@ -66,7 +72,7 @@ const BlogList = () => {
                       {post.published_at && (
                         <span className="flex items-center gap-1">
                           <Calendar size={12} />
-                          {format(new Date(post.published_at), "dd MMM yyyy", { locale: id })}
+                          {format(new Date(post.published_at), 'dd MMM yyyy', { locale: id })}
                         </span>
                       )}
                       {post.reading_time_minutes && (
@@ -102,6 +108,4 @@ const BlogList = () => {
       <FloatingContact />
     </div>
   );
-};
-
-export default BlogList;
+}

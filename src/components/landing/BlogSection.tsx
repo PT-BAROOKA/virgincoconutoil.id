@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+'use client';
+
+import Link from "next/link";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { Calendar, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
@@ -36,7 +38,7 @@ const BlogSection = () => {
               {posts.map((post) => (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  href={`/blog/${post.slug}`}
                   className="group bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all duration-300"
                   style={{ boxShadow: "var(--shadow-sm)" }}
                 >
@@ -68,7 +70,7 @@ const BlogSection = () => {
             </div>
             <div className="text-center mt-8">
               <Link
-                to="/blog"
+                href="/blog"
                 className="inline-flex items-center gap-2 text-sm font-body font-semibold text-primary hover:text-primary/80 transition-colors"
               >
                 Lihat Semua Artikel

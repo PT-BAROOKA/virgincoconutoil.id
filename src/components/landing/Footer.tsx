@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+'use client';
 
 const Footer = () => {
   const scrollTo = (id: string) => {

@@ -1,15 +1,19 @@
-import { useParams, Link } from "react-router-dom";
-import { useBlogPost } from "@/hooks/useBlogPosts";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import Navbar from "@/components/landing/Navbar";
-import Footer from "@/components/landing/Footer";
-import FloatingContact from "@/components/landing/FloatingContact";
+'use client';
 
-const BlogDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, error } = useBlogPost(slug || "");
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useBlogPost } from '@/hooks/useBlogPosts';
+import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import Navbar from '@/components/landing/Navbar';
+import Footer from '@/components/landing/Footer';
+import FloatingContact from '@/components/landing/FloatingContact';
+
+export default function BlogDetail() {
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug ?? '';
+  const { data: post, isLoading, error } = useBlogPost(slug);
 
   if (isLoading) {
     return (
@@ -40,7 +44,7 @@ const BlogDetail = () => {
         <main className="pt-20 section-padding">
           <div className="container-main max-w-3xl text-center">
             <h1 className="text-2xl font-display font-bold text-foreground mb-4">Artikel Tidak Ditemukan</h1>
-            <Link to="/blog" className="text-primary font-body hover:underline">
+            <Link href="/blog" className="text-primary font-body hover:underline">
               ← Kembali ke Blog
             </Link>
           </div>
@@ -54,7 +58,10 @@ const BlogDetail = () => {
       <Navbar />
       <main className="pt-20 section-padding">
         <article className="container-main max-w-3xl">
-          <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors"
+          >
             <ArrowLeft size={16} />
             Kembali ke Blog
           </Link>
@@ -63,7 +70,7 @@ const BlogDetail = () => {
             {post.published_at && (
               <span className="flex items-center gap-1">
                 <Calendar size={14} />
-                {format(new Date(post.published_at), "dd MMMM yyyy", { locale: id })}
+                {format(new Date(post.published_at), 'dd MMMM yyyy', { locale: id })}
               </span>
             )}
             {post.reading_time_minutes && (
@@ -85,6 +92,7 @@ const BlogDetail = () => {
 
           {post.featured_image_url && (
             <div className="rounded-lg overflow-hidden mb-8">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.featured_image_url}
                 alt={post.title}
@@ -116,6 +124,4 @@ const BlogDetail = () => {
       <FloatingContact />
     </div>
   );
-};
-
-export default BlogDetail;
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import vcoBulk1 from "@/assets/Curah_produk.jpeg";
 import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
