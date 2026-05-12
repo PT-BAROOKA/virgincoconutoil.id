@@ -33,21 +33,21 @@ const downloadKatalog = (setLoading: (v: boolean) => void) => {
 
 const retailProducts = [
   {
-    image: vco250ml,
+    image: vco250ml.src,
     title: "VCO Barooka 250ml",
     price: "Rp 38.999",
     desc: "Virgin Coconut Oil premium dalam kemasan botol kaca 250ml. Cocok untuk konsumsi harian, memasak, dan perawatan kulit & rambut.",
     waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 250ml. Bisa info harga dan cara pemesanannya?",
   },
   {
-    image: vcoBulk2,
+    image: vcoBulk2.src,
     title: "VCO Barooka 500ml",
     price: "Rp 70.999",
     desc: "Ukuran keluarga untuk kebutuhan memasak sehari-hari. Minyak kelapa murni cold-pressed yang menjaga cita rasa masakan Anda.",
     waMessage: "Halo, saya berminat dengan VCO Barooka kemasan 500ml. Bisa info harga dan cara pemesanannya?",
   },
   {
-    image: vcoBulk3,
+    image: vcoBulk3.src,
     title: "VCO Barooka 1 Liter",
     price: "Rp 131.999",
     desc: "Ukuran hemat untuk kebutuhan keluarga atau usaha kecil. Minyak kelapa murni berkualitas tinggi dengan harga terbaik per mililiter.",
@@ -75,7 +75,7 @@ const ProductsSection = () => {
           style={{ boxShadow: "var(--shadow-sm)" }}
         >
           <div className="h-64 md:h-auto overflow-hidden">
-            <img src={vcoBulk1} alt="Pembelian Curah VCO Barooka" className="w-full h-full object-cover" />
+            <img src={vcoBulk1.src} alt="Pembelian Curah VCO Barooka" className="w-full h-full object-cover" />
           </div>
           <div className="bg-card p-8 md:p-10 flex flex-col justify-center">
             <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir & Curah</p>
@@ -124,7 +124,7 @@ const ProductsSection = () => {
             </div>
           </div>
           <div className="h-64 md:h-auto overflow-hidden md:order-1 order-0">
-            <img src={vcoBulk2} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
+            <img src={vcoBulk2.src} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
           </div>
         </div>
 

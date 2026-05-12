@@ -26,7 +26,7 @@ const VCOBulkSection = () => {
         >
           <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
             <img
-              src={vcoCooking}
+              src={vcoCooking.src}
               alt="Pembelian Curah & B2B VCO"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
@@ -60,7 +60,7 @@ const VCOBulkSection = () => {
         >
           <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
             <img
-              src={vcoBeauty}
+              src={vcoBeauty.src}
               alt="Maklon VCO"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />

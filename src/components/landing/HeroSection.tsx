@@ -14,7 +14,7 @@ const HeroSection = () => {
   return (
     <section id="beranda" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image */}
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg.src})` }} />
       {/* Gradient overlay */}
       <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
 
