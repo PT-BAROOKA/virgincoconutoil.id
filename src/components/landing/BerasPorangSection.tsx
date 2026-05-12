@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import vcoCooking from "@/assets/vco-cooking.jpg";
 import vcoBeauty from "@/assets/vco-beauty.jpg";
@@ -24,17 +25,18 @@ const VCOBulkSection = () => {
           className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-card rounded-lg overflow-hidden border border-border mb-10 animate-fade-in-up"
           style={{ boxShadow: "var(--shadow-md)" }}
         >
-          <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
-            <img
+          <div className="aspect-[4/3] lg:aspect-auto overflow-hidden relative">
+            <Image
               src={vcoCooking}
               alt="Pembelian Curah & B2B VCO"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="flex flex-col justify-center p-8 md:p-12">
-            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir & Curah</p>
+            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir &amp; Curah</p>
             <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">
-              Pembelian Curah & B2B
+              Pembelian Curah &amp; B2B
             </h3>
             <p className="text-muted-foreground font-body leading-relaxed mb-6">
               Melayani pembelian grosir Virgin Coconut Oil mulai dari 20 liter. Tersedia dalam jeriken dan drum untuk kebutuhan industri, HORECA, dan distributor. Harga spesial untuk pembelian dalam jumlah besar.
@@ -58,11 +60,12 @@ const VCOBulkSection = () => {
           className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-card rounded-lg overflow-hidden border border-border animate-fade-in-up"
           style={{ animationDelay: "0.15s", boxShadow: "var(--shadow-md)" }}
         >
-          <div className="aspect-[4/3] lg:aspect-auto overflow-hidden">
-            <img
+          <div className="aspect-[4/3] lg:aspect-auto overflow-hidden relative">
+            <Image
               src={vcoBeauty}
               alt="Maklon VCO"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-500"
             />
           </div>
           <div className="flex flex-col justify-center p-8 md:p-12">

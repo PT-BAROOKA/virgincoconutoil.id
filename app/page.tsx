@@ -9,7 +9,7 @@ import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
 import FloatingChatbot from "@/components/landing/FloatingChatbot";
 import LeadCapturePopup from "@/components/landing/LeadCapturePopup";
 
-const Index = () => {
+export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -21,10 +21,7 @@ const Index = () => {
       <Footer />
       <FloatingChatbot />
       <FloatingWhatsApp />
-      <FloatingChatbot />
       <LeadCapturePopup />
     </div>
   );
-};
-
-export default Index;
+}

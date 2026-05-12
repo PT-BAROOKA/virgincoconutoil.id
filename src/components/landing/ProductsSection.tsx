@@ -1,3 +1,4 @@
+import Image from "next/image";
 import vcoBulk1 from "@/assets/Curah_produk.jpeg";
 import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
@@ -47,12 +48,12 @@ const ProductsSection = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-0 rounded-lg overflow-hidden border border-border mb-8 animate-fade-in-up"
           style={{ boxShadow: "var(--shadow-sm)" }}
         >
-          <div className="h-64 md:h-auto overflow-hidden">
-            <img src={vcoBulk1} alt="Pembelian Curah VCO Barooka" className="w-full h-full object-cover" />
+          <div className="h-64 md:h-auto overflow-hidden relative">
+            <Image src={vcoBulk1} alt="Pembelian Curah VCO Barooka" fill className="object-cover" />
           </div>
           <div className="bg-card p-8 md:p-10 flex flex-col justify-center">
-            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir & Curah</p>
-            <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">Pembelian Curah & B2B</h3>
+            <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Grosir &amp; Curah</p>
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-4">Pembelian Curah &amp; B2B</h3>
             <p className="text-sm font-body text-muted-foreground leading-relaxed mb-6">
               Melayani pembelian grosir mulai dari 5 Liter. Tersedia dalam jerigen dan drum untuk kebutuhan industri,
               HORECA, dan distributor. Harga spesial untuk pembelian dalam jumlah besar.
@@ -96,8 +97,8 @@ const ProductsSection = () => {
               </a>
             </div>
           </div>
-          <div className="h-64 md:h-auto overflow-hidden md:order-1 order-0">
-            <img src={vcoBulk2} alt="Layanan Maklon VCO Barooka" className="w-full h-full object-cover" />
+          <div className="h-64 md:h-auto overflow-hidden relative md:order-1 order-0">
+            <Image src={vcoBulk2} alt="Layanan Maklon VCO Barooka" fill className="object-cover" />
           </div>
         </div>
 
@@ -113,11 +114,12 @@ const ProductsSection = () => {
               className="bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow duration-300 animate-fade-in-up"
               style={{ animationDelay: `${i * 0.15}s`, boxShadow: "var(--shadow-sm)" }}
             >
-              <div className="aspect-square overflow-hidden">
-                <img
+              <div className="aspect-square overflow-hidden relative">
+                <Image
                   src={p.image}
                   alt={p.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
               <div className="p-6">

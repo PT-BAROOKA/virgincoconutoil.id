@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+'use client';
+
+import Link from "next/link";
+import Image from "next/image";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
@@ -8,7 +11,7 @@ import Footer from "@/components/landing/Footer";
 import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
 import FloatingChatbot from "@/components/landing/FloatingChatbot";
 
-const BlogList = () => {
+export default function BlogListPage() {
   const { data: posts, isLoading } = useBlogPosts();
 
   return (
@@ -16,7 +19,7 @@ const BlogList = () => {
       <Navbar />
       <main className="pt-20 section-padding">
         <div className="container-main">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
             <ArrowLeft size={16} />
             Kembali ke Beranda
           </Link>
@@ -24,7 +27,7 @@ const BlogList = () => {
           <div className="text-center mb-12">
             <p className="text-accent font-body text-sm tracking-widest uppercase mb-2">Blog</p>
             <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">
-              Artikel & Tips
+              Artikel &amp; Tips
             </h1>
             <p className="text-muted-foreground font-body mt-3 max-w-xl mx-auto">
               Informasi terbaru seputar manfaat Virgin Coconut Oil untuk kesehatan dan kecantikan.
@@ -49,16 +52,17 @@ const BlogList = () => {
               {posts.map((post) => (
                 <Link
                   key={post.id}
-                  to={`/blog/${post.slug}`}
+                  href={`/blog/${post.slug}`}
                   className="group bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all duration-300"
                   style={{ boxShadow: "var(--shadow-sm)" }}
                 >
                   {post.featured_image_url && (
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
+                    <div className="aspect-[4/3] overflow-hidden relative">
+                      <Image
                         src={post.featured_image_url}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                   )}
@@ -104,6 +108,4 @@ const BlogList = () => {
       <FloatingChatbot />
     </div>
   );
-};
-
-export default BlogList;
+}

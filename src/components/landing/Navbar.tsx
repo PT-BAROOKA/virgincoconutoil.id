@@ -1,8 +1,12 @@
+'use client';
+
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import barookaLogo from "@/assets/barooka_logo.png";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Beranda", href: "#beranda" },
@@ -17,18 +21,18 @@ const WA_MESSAGE = encodeURIComponent("Halo, saya ingin bertanya tentang produk 
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     if (href.startsWith("/")) {
-      navigate(href);
+      router.push(href);
       return;
     }
     if (href.startsWith("#")) {
-      if (location.pathname !== "/") {
-        navigate(`/${href}`);
+      if (pathname !== "/") {
+        router.push(`/${href}`);
         return;
       }
       const el = document.querySelector(href);
@@ -39,8 +43,8 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container-main flex items-center justify-between px-4 py-3 md:px-8">
-        <Link to="/" className="flex items-center">
-          <img src={barookaLogo} alt="Barooka VCO" className="h-10" />
+        <Link href="/" className="flex items-center">
+          <Image src={barookaLogo} alt="Barooka VCO" className="h-10 w-auto" height={40} />
           <span className="ml-2 font-display font-semibold text-foreground text-sm leading-tight">
             Virgin<br />Coconut Oil
           </span>

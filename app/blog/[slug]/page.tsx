@@ -1,4 +1,8 @@
-import { useParams, Link } from "react-router-dom";
+'use client';
+
+import { use } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { useBlogPost } from "@/hooks/useBlogPosts";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { format } from "date-fns";
@@ -8,9 +12,9 @@ import Footer from "@/components/landing/Footer";
 import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
 import FloatingChatbot from "@/components/landing/FloatingChatbot";
 
-const BlogDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, error } = useBlogPost(slug || "");
+export default function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
+  const { data: post, isLoading, error } = useBlogPost(slug);
 
   if (isLoading) {
     return (
@@ -41,7 +45,7 @@ const BlogDetail = () => {
         <main className="pt-20 section-padding">
           <div className="container-main max-w-3xl text-center">
             <h1 className="text-2xl font-display font-bold text-foreground mb-4">Artikel Tidak Ditemukan</h1>
-            <Link to="/blog" className="text-primary font-body hover:underline">
+            <Link href="/blog" className="text-primary font-body hover:underline">
               ← Kembali ke Blog
             </Link>
           </div>
@@ -55,7 +59,7 @@ const BlogDetail = () => {
       <Navbar />
       <main className="pt-20 section-padding">
         <article className="container-main max-w-3xl">
-          <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-body text-muted-foreground hover:text-primary mb-6 transition-colors">
             <ArrowLeft size={16} />
             Kembali ke Blog
           </Link>
@@ -85,11 +89,12 @@ const BlogDetail = () => {
           </h1>
 
           {post.featured_image_url && (
-            <div className="rounded-lg overflow-hidden mb-8">
-              <img
+            <div className="rounded-lg overflow-hidden mb-8 relative aspect-video">
+              <Image
                 src={post.featured_image_url}
                 alt={post.title}
-                className="w-full h-auto object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           )}
@@ -118,6 +123,4 @@ const BlogDetail = () => {
       <FloatingChatbot />
     </div>
   );
-};
-
-export default BlogDetail;
+}

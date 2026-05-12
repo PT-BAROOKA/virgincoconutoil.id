@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase as supabaseClient } from "@/integrations/supabase/client";
+
+// Cast to avoid deep Supabase generic type instantiation errors with Next.js tsc
+const supabase = supabaseClient as any; // noqa
 
 export interface BlogPost {
   id: string;

@@ -1,3 +1,7 @@
+'use client';
+
+import Image from "next/image";
+
 import heroBg from "@/assets/hero-bg.jpg";
 import { Button } from "@/components/ui/button";
 
@@ -12,7 +16,13 @@ const HeroSection = () => {
   return (
     <section id="beranda" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image */}
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroBg})` }} />
+      <Image
+        src={heroBg}
+        alt="Barooka VCO hero background"
+        fill
+        className="object-cover object-center"
+        priority
+      />
       {/* Gradient overlay */}
       <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
 
@@ -25,13 +35,13 @@ const HeroSection = () => {
           style={{ animationDelay: "0.1s" }}
         >
           Satu Botol untuk Kesehatan, <br className="hidden md:block" />
-          Kecantikan & Masakan Anda
+          Kecantikan &amp; Masakan Anda
         </h1>
         <p
           className="text-primary-foreground/80 font-body text-base md:text-lg max-w-2xl mx-auto mb-8 animate-fade-in-up"
           style={{ animationDelay: "0.2s" }}
         >
-          VCO Barooka 100% murni dari kelapa segar pilihan. Tinggi asam laurat untuk menjaga imun tubuh, merawat kulit &
+          VCO Barooka 100% murni dari kelapa segar pilihan. Tinggi asam laurat untuk menjaga imun tubuh, merawat kulit &amp;
           rambut, serta menyehatkan masakan keluarga Anda.
         </p>
 
