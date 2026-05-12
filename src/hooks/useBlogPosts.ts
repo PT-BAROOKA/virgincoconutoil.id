@@ -49,7 +49,8 @@ export const useBlogPost = (slug: string) => {
   return useQuery({
     queryKey: ["blog-post", slug],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // @ts-ignore — TS2589 type instantiation too deep on Supabase query chain
+      const { data, error } = await (supabase as unknown as any)
         .from("vco_blog_posts")
         .select("*")
         .eq("slug", slug)
