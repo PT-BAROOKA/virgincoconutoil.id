@@ -27,7 +27,8 @@ export const useBlogPosts = (limit?: number) => {
   return useQuery({
     queryKey: ["blog-posts", limit],
     queryFn: async () => {
-      let query = supabase
+      // @ts-ignore — TS2589 type instantiation too deep on Supabase query chain
+      let query = (supabase as unknown as any)
         .from("vco_blog_posts")
         .select("*")
         .eq("status", "published")
