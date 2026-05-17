@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Katalog Harga Grosir Barooka — PT. Barooka Global Indonesia</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#ddd8cc;padding-top:52px;}
+
+    /* ── TOP BAR ── */
+    #topbar{
+      position:fixed;top:0;left:0;right:0;z-index:999;
+      background:#1C3D1C;padding:10px 24px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 2px 10px rgba(0,0,0,.4);
+    }
+    #topbar span{color:rgba(255,255,255,.6);font-size:13px;}
+    #topbar strong{color:#E8C97A;}
+    #btn-dl{
+      background:#C9A84C;color:#1C3D1C;border:none;
+      padding:9px 22px;border-radius:22px;
+      font-size:13px;font-weight:700;cursor:pointer;
+      display:flex;align-items:center;gap:7px;
+    }
+    #btn-dl:hover{background:#E8C97A;}
+    #btn-dl svg{width:16px;height:16px;fill:currentColor;}
+    #progress{display:none;color:#E8C97A;font-size:12px;font-weight:600;}
+
+    /* ── PAGE ── */
+    .page{
+      width:210mm;min-height:297mm;
+      margin:20px auto;background:#F5F0E4;
+      display:flex;flex-direction:column;
+      box-shadow:0 4px 20px rgba(0,0,0,.2);
+      position:relative;overflow:hidden;
+      page-break-after:always;
+    }
+
+    /* ── HEADER ── */
+    .ph{
+      background:#1C3D1C;padding:13px 28px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .ph img{height:32px;filter:brightness(0) invert(1);opacity:.9;}
+    .ph-right{text-align:right;}
+    .ph-co{color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+    .ph-yr{color:#C9A84C;font-size:10px;}
+
+    /* gold line */
+    .gline{height:3px;background:linear-gradient(90deg,#C9A84C,#E8C97A,#C9A84C);}
+
+    /* ── FOOTER ── */
+    .pf{
+      background:#1C3D1C;padding:9px 28px;margin-top:auto;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .pf img{height:22px;filter:brightness(0) invert(1);opacity:.7;}
+    .pf-txt{color:rgba(255,255,255,.55);font-size:9px;}
+    .pf-txt strong{color:#C9A84C;}
+
+    /* ══ PAGE 1 — COVER ══ */
+    .cover-body{
+      flex:1;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:44px;background:#F5F0E4;
+      text-align:center;
+    }
+    .cover-badge{
+      background:#C9A84C;color:#1C3D1C;
+      font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+      padding:7px 22px;border-radius:22px;margin-bottom:28px;
+    }
+    .cover-title{
+      font-family:Georgia,serif;font-size:48px;font-weight:900;
+      color:#1C3D1C;line-height:1.05;margin-bottom:12px;
+    }
+    .cover-sub{color:#555;font-size:15px;margin-bottom:32px;max-width:380px;line-height:1.5;}
+    .cover-logo{height:80px;margin-bottom:24px;}
+    .cover-products{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:10px;
+      margin:24px 0 32px;max-width:480px;
+    }
+    .cover-products span{
+      background:#1C3D1C;color:#C9A84C;
+      font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+      padding:6px 14px;border-radius:4px;
+    }
+    .cover-contact{
+      margin-top:20px;font-size:13px;color:#555;line-height:1.8;
+    }
+    .cover-contact strong{color:#1C3D1C;}
+    .cover-divider{width:60px;height:3px;background:#C9A84C;margin:20px auto;}
+
+    /* ══ PRODUCT PAGES ══ */
+    .prod-body{flex:1;padding:24px 32px 20px;}
+    .prod-header{
+      display:flex;align-items:flex-start;gap:20px;margin-bottom:20px;
+    }
+    .prod-icon{
+      width:56px;height:56px;border-radius:50%;
+      background:#1C3D1C;display:flex;align-items:center;justify-content:center;
+      font-size:28px;flex-shrink:0;
+    }
+    .prod-name{
+      font-family:Georgia,serif;font-size:30px;font-weight:900;
+      color:#1C3D1C;line-height:1.1;
+    }
+    .prod-name-id{font-size:13px;color:#777;font-style:italic;font-family:'Segoe UI',Arial;}
+    .prod-desc{
+      font-size:12px;color:#444;line-height:1.6;
+      margin-bottom:18px;padding-left:76px;
+    }
+
+    /* pricing table */
+    .price-section-title{
+      font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+      color:#1C3D1C;margin-bottom:8px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .price-section-title::after{
+      content:'';flex:1;height:1px;background:#C9A84C;
+    }
+    .price-table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px;}
+    .price-table th{
+      background:#1C3D1C;color:#E8C97A;
+      padding:7px 12px;text-align:left;
+      font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    }
+    .price-table td{
+      padding:7px 12px;border-bottom:1px solid #e0dbd0;
+      color:#333;vertical-align:middle;
+    }
+    .price-table tr:nth-child(even) td{background:#EDE8DC;}
+    .price-tag{
+      font-family:Georgia,serif;font-weight:700;font-size:14px;color:#1C3D1C;
+    }
+    .price-tag.highlight{color:#C9A84C;font-size:16px;}
+    .note-box{
+      background:#1C3D1C;color:#E8C97A;border-radius:6px;
+      padding:10px 16px;font-size:11px;font-weight:600;
+      display:flex;align-items:center;gap:10px;margin-top:4px;
+    }
+    .note-box span{font-size:18px;}
+
+    /* ══ SUMMARY PAGE ══ */
+    .summary-body{flex:1;padding:24px 32px 20px;}
+    .summary-title{
+      font-family:Georgia,serif;font-size:26px;font-weight:900;
+      color:#1C3D1C;margin-bottom:6px;
+    }
+    .summary-sub{font-size:12px;color:#666;margin-bottom:20px;}
+    .summary-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;
+    }
+    .summary-card{
+      border:1px solid #d5cfc3;border-radius:6px;padding:14px 16px;
+      background:#fff;
+    }
+    .summary-card-name{
+      font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+      color:#777;margin-bottom:4px;
+    }
+    .summary-card-price{
+      font-family:Georgia,serif;font-size:20px;font-weight:900;color:#1C3D1C;
+    }
+    .summary-card-unit{font-size:11px;color:#999;}
+    .summary-card-alt{font-size:11px;color:#C9A84C;font-weight:600;margin-top:2px;}
+    .terms-box{
+      background:#1C3D1C;color:#fff;border-radius:8px;
+      padding:16px 20px;font-size:11px;line-height:1.8;
+    }
+    .terms-box h4{color:#C9A84C;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+    .terms-box ul{padding-left:16px;}
+    .terms-box li{margin-bottom:3px;}
+
+    @media print{
+      body{background:#fff;padding-top:0;}
+      #topbar{display:none;}
+      .page{margin:0;box-shadow:none;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div><span>PT. Barooka Global Indonesia</span> &nbsp;·&nbsp; <strong>Katalog Harga Grosir 2026</strong></div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <span id="progress"></span>
+    <button id="btn-dl" onclick="downloadPDF()">
+      <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Download PDF
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 1 — COVER ══════════════ -->
+<div class="page" id="p1">
+  <div class="ph">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="ph-right">
+      <div class="ph-co">PT. Barooka Global Indonesia</div>
+      <div class="ph-yr">Katalog Harga Grosir 2026</div>
+    </div>
+  </div>
+  <div class="gline"></div>
+
+  <div class="cover-body">
+    <div class="cover-badge">Katalog Produk Resmi</div>
+    <div class="cover-title">Harga Grosir<br/>Barooka 2026</div>
+    <div class="cover-sub">Harga curah, packaging, dan eceran untuk semua produk unggulan PT. Barooka Global Indonesia. Kualitas premium, pengiriman ke seluruh Indonesia.</div>
+    <div class="cover-divider"></div>
+    <div class="cover-products">
+      <span>Virgin Coconut Oil</span>
+      <span>Coconut Cooking Oil</span>
+      <span>Chiaseed</span>
+      <span>Beras Porang</span>
+      <span>Cuka Apel</span>
+      <span>Sari Lemon</span>
+      <span>Stevia</span>
+      <span>Minyak Kemiri Bakar</span>
+    </div>
+    <div class="cover-divider"></div>
+    <div class="cover-contact">
+      <strong>Hubungi Kami:</strong><br/>
+      WhatsApp: 0856-4748-6700<br/>
+      Email: barooka.id@gmail.com<br/>
+      Web: virgincoconutoil.id &bull; kemiribakar.com &bull; chiaseed.id
+    </div>
+  </div>
+
+  <div class="gline"></div>
+  <div class="pf">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="pf-txt">PT. Barooka Global Indonesia &bull; Harga berlaku 2026 &bull; Harga dapat berubah sewaktu-waktu</div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 2 — VCO & COCONUT COOKING OIL ══════════════ -->
+<div class="page" id="p2">
+  <div class="ph">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="ph-right">
+      <div class="ph-co">Produk Kelapa</div>
+      <div class="ph-yr">Halaman 2 / 5</div>
+    </div>
+  </div>
+  <div class="gline"></div>
+
+  <div class="prod-body">
+    <!-- VCO -->
+    <div class="prod-header">
+      <div class="prod-icon">🥥</div>
+      <div>
+        <div class="prod-name">Virgin Coconut Oil</div>
+        <div class="prod-name-id">VCO Premium Cold-Pressed</div>
+      </div>
+    </div>
+    <div class="prod-desc">100% murni dari kelapa segar pilihan. Tinggi asam laurat untuk menjaga imun tubuh, merawat kulit & rambut, serta menyehatkan masakan keluarga Anda.</div>
+
+    <div class="price-section-title">Harga Curah (Tanpa Packaging)</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga + Packaging</th></tr>
+      <tr><td>100 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 17.500</td></tr>
+      <tr><td>250 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 28.000</td></tr>
+      <tr><td>500 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 50.000</td></tr>
+      <tr><td>1 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 93.000</td><td class="price-tag">Rp 95.000</td></tr>
+      <tr><td>5 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 460.000</td><td class="price-tag">Rp 462.000</td></tr>
+      <tr><td>10 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 910.000</td><td class="price-tag">Rp 912.000</td></tr>
+      <tr><td>20 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 1.800.000</td><td class="price-tag">Rp 1.802.000</td></tr>
+    </table>
+
+    <div style="height:16px;"></div>
+
+    <!-- Coconut Cooking Oil -->
+    <div class="prod-header">
+      <div class="prod-icon">🫙</div>
+      <div>
+        <div class="prod-name">Coconut Cooking Oil</div>
+        <div class="prod-name-id">Minyak Masak Kelapa Premium</div>
+      </div>
+    </div>
+    <div class="prod-desc">Minyak masak berbahan baku kelapa pilihan, cocok untuk kebutuhan industri makanan, UMKM, dan distribusi retail.</div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga + Packaging</th></tr>
+      <tr><td>1 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 65.000</td><td class="price-tag">Rp 67.000</td></tr>
+      <tr><td>5 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 320.000</td><td class="price-tag">Rp 322.000</td></tr>
+      <tr><td>10 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 630.000</td><td class="price-tag">Rp 633.000</td></tr>
+      <tr><td>20 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 1.220.000</td><td class="price-tag">Rp 1.222.000</td></tr>
+    </table>
+
+    <div class="note-box"><span>📞</span>Min. order curah mulai 1 liter. Hubungi WA 0856-4748-6700 untuk harga lebih lanjut.</div>
+  </div>
+
+  <div class="gline"></div>
+  <div class="pf">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="pf-txt">PT. Barooka Global Indonesia &bull; WA: 0856-4748-6700 &bull; Harga berlaku 2026</div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 3 — CHIASEED & BERAS PORANG ══════════════ -->
+<div class="page" id="p3">
+  <div class="ph">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="ph-right">
+      <div class="ph-co">Produk Kesehatan</div>
+      <div class="ph-yr">Halaman 3 / 5</div>
+    </div>
+  </div>
+  <div class="gline"></div>
+
+  <div class="prod-body">
+    <!-- Chiaseed -->
+    <div class="prod-header">
+      <div class="prod-icon">🌱</div>
+      <div>
+        <div class="prod-name">Chiaseed</div>
+        <div class="prod-name-id">Biji Chia Super Food Premium</div>
+      </div>
+    </div>
+    <div class="prod-desc">Biji chia kaya omega-3, serat, dan protein. Tersedia curah untuk distributor, brand makanan sehat, dan retail modern.</div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga</th></tr>
+      <tr><td>100 gr</td><td>Pouch</td><td class="price-tag">Rp 16.000</td></tr>
+      <tr><td>200 gr</td><td>Pouch</td><td class="price-tag">Rp 25.000</td></tr>
+      <tr><td>1 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 83.000</td></tr>
+      <tr><td>5 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 412.500</td></tr>
+      <tr><td>10 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 820.000</td></tr>
+      <tr><td>25 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 2.000.000</td></tr>
+    </table>
+
+    <div style="height:16px;"></div>
+
+    <!-- Beras Porang -->
+    <div class="prod-header">
+      <div class="prod-icon">🍚</div>
+      <div>
+        <div class="prod-name">Beras Porang</div>
+        <div class="prod-name-id">Beras Rendah Kalori & Karbohidrat</div>
+      </div>
+    </div>
+    <div class="prod-desc">Beras porang rendah kalori, rendah karbohidrat, dan kaya serat konjak. Solusi sehat untuk diet dan kebutuhan gula darah normal.</div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga Pouch</th></tr>
+      <tr><td>1 Kg</td><td>Curah / Pouch</td><td class="price-tag highlight">Rp 100.000</td><td class="price-tag">Rp 105.000</td></tr>
+      <tr><td>5 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 465.000</td><td>—</td></tr>
+      <tr><td>10 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 920.000</td><td>—</td></tr>
+      <tr><td>25 Kg</td><td>Curah</td><td class="price-tag highlight">Rp 2.250.000</td><td>—</td></tr>
+    </table>
+
+    <div class="note-box"><span>📦</span>Tersedia pengiriman ke seluruh Indonesia. Custom packaging untuk brand Anda.</div>
+  </div>
+
+  <div class="gline"></div>
+  <div class="pf">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="pf-txt">PT. Barooka Global Indonesia &bull; WA: 0856-4748-6700 &bull; Harga berlaku 2026</div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 4 — CUKA APEL & SARI LEMON & STEVIA ══════════════ -->
+<div class="page" id="p4">
+  <div class="ph">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="ph-right">
+      <div class="ph-co">Produk Cair Kesehatan</div>
+      <div class="ph-yr">Halaman 4 / 5</div>
+    </div>
+  </div>
+  <div class="gline"></div>
+
+  <div class="prod-body">
+    <!-- Cuka Apel -->
+    <div class="prod-header">
+      <div class="prod-icon">🍎</div>
+      <div>
+        <div class="prod-name">Cuka Apel</div>
+        <div class="prod-name-id">Apple Cider Vinegar — Fermentasi Alami</div>
+      </div>
+    </div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga + Packaging</th></tr>
+      <tr><td>250 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 12.000</td></tr>
+      <tr><td>500 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 18.000</td></tr>
+      <tr><td>1 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 23.250</td><td class="price-tag">Rp 24.500</td></tr>
+      <tr><td>5 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 105.000</td><td class="price-tag">Rp 107.000</td></tr>
+      <tr><td>10 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 205.000</td><td class="price-tag">Rp 207.000</td></tr>
+      <tr><td>20 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 405.000</td><td class="price-tag">Rp 407.000</td></tr>
+    </table>
+
+    <div style="height:12px;"></div>
+
+    <!-- Sari Lemon -->
+    <div class="prod-header">
+      <div class="prod-icon">🍋</div>
+      <div>
+        <div class="prod-name">Sari Lemon</div>
+        <div class="prod-name-id">Lemon Juice — 100% Alami</div>
+      </div>
+    </div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga + Packaging</th></tr>
+      <tr><td>250 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 14.500</td></tr>
+      <tr><td>500 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 22.000</td></tr>
+      <tr><td>1 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 31.500</td><td class="price-tag">Rp 33.000</td></tr>
+      <tr><td>5 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 137.500</td><td class="price-tag">Rp 139.000</td></tr>
+      <tr><td>10 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 260.000</td><td class="price-tag">Rp 262.000</td></tr>
+      <tr><td>20 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 520.000</td><td class="price-tag">Rp 522.000</td></tr>
+    </table>
+
+    <div style="height:12px;"></div>
+
+    <!-- Stevia -->
+    <div class="prod-header">
+      <div class="prod-icon">🌿</div>
+      <div>
+        <div class="prod-name">Stevia</div>
+        <div class="prod-name-id">Pemanis Alami Tanpa Kalori</div>
+      </div>
+    </div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga</th></tr>
+      <tr><td>5 ml</td><td>Botol</td><td class="price-tag">Rp 10.900</td></tr>
+      <tr><td>10 ml</td><td>Botol</td><td class="price-tag">Rp 17.900</td></tr>
+      <tr><td>1 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 690.000</td></tr>
+      <tr><td>5 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 3.400.000</td></tr>
+      <tr><td>10 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 6.820.000</td></tr>
+      <tr><td>20 Liter</td><td>Botol</td><td class="price-tag highlight">Rp 13.550.000</td></tr>
+    </table>
+  </div>
+
+  <div class="gline"></div>
+  <div class="pf">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="pf-txt">PT. Barooka Global Indonesia &bull; WA: 0856-4748-6700 &bull; Harga berlaku 2026</div>
+  </div>
+</div>
+
+<!-- ══════════════ PAGE 5 — KEMIRI BAKAR & RINGKASAN ══════════════ -->
+<div class="page" id="p5">
+  <div class="ph">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="ph-right">
+      <div class="ph-co">Kemiri & Ringkasan</div>
+      <div class="ph-yr">Halaman 5 / 5</div>
+    </div>
+  </div>
+  <div class="gline"></div>
+
+  <div class="summary-body">
+    <!-- Kemiri Bakar -->
+    <div class="prod-header">
+      <div class="prod-icon">🌰</div>
+      <div>
+        <div class="prod-name">Minyak Kemiri Bakar</div>
+        <div class="prod-name-id">Candlenut Oil — Pabrik di Klaten</div>
+      </div>
+    </div>
+    <div class="prod-desc">Minyak kemiri bakar berkualitas tinggi dari pabrik kami di Klaten. Tersedia untuk maklon, distributor, dan grosir.</div>
+
+    <div class="price-section-title">Harga Grosir</div>
+    <table class="price-table">
+      <tr><th>Ukuran</th><th>Kemasan</th><th>Harga Curah</th><th>Harga + Packaging</th></tr>
+      <tr><td>100 ml</td><td>Botol</td><td>—</td><td class="price-tag">Rp 14.000</td></tr>
+      <tr><td>1 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 95.000</td><td class="price-tag">Rp 97.000</td></tr>
+      <tr><td>5 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 430.000</td><td class="price-tag">Rp 432.000</td></tr>
+      <tr><td>10 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 840.000</td><td class="price-tag">Rp 842.000</td></tr>
+      <tr><td>20 Liter</td><td>Jerigen</td><td class="price-tag highlight">Rp 1.600.000</td><td class="price-tag">Rp 1.602.000</td></tr>
+    </table>
+
+    <div style="height:16px;"></div>
+
+    <!-- Summary grid -->
+    <div class="price-section-title">Ringkasan Harga Terbaik (per Liter / Kg)</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-card-name">Virgin Coconut Oil</div>
+        <div class="summary-card-price">Rp 93.000</div>
+        <div class="summary-card-unit">per Liter (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Coconut Cooking Oil</div>
+        <div class="summary-card-price">Rp 65.000</div>
+        <div class="summary-card-unit">per Liter (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Chiaseed</div>
+        <div class="summary-card-price">Rp 83.000</div>
+        <div class="summary-card-unit">per Kg (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Beras Porang</div>
+        <div class="summary-card-price">Rp 100.000</div>
+        <div class="summary-card-unit">per Kg (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Cuka Apel</div>
+        <div class="summary-card-price">Rp 23.250</div>
+        <div class="summary-card-unit">per Liter (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Sari Lemon</div>
+        <div class="summary-card-price">Rp 31.500</div>
+        <div class="summary-card-unit">per Liter (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Minyak Kemiri Bakar</div>
+        <div class="summary-card-price">Rp 95.000</div>
+        <div class="summary-card-unit">per Liter (curah)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-name">Stevia</div>
+        <div class="summary-card-price">Rp 690.000</div>
+        <div class="summary-card-unit">per Liter</div>
+      </div>
+    </div>
+
+    <div class="terms-box">
+      <h4>Syarat & Ketentuan Pembelian</h4>
+      <ul>
+        <li>Harga belum termasuk ongkos kirim, kecuali area Jawa Tengah (dapat didiskusikan)</li>
+        <li>Pembayaran: Transfer Bank / COD area tertentu</li>
+        <li>Min. order curah: 1 Liter / 1 Kg untuk semua produk</li>
+        <li>Tersedia layanan maklon (private label) untuk semua produk</li>
+        <li>Harga dapat berubah sewaktu-waktu — konfirmasi via WhatsApp sebelum order</li>
+        <li>Reseller & distributor: hubungi kami untuk harga khusus</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="gline"></div>
+  <div class="pf">
+    <img src="/barooka-logo500px.png" alt="Barooka"/>
+    <div class="pf-txt">PT. Barooka Global Indonesia &bull; WA: 0856-4748-6700 &bull; barooka.id@gmail.com &bull; Harga berlaku 2026</div>
+  </div>
+</div>
+
+<script>
+async function downloadPDF() {
+  const btn = document.getElementById('btn-dl');
+  const prog = document.getElementById('progress');
+  btn.disabled = true;
+  prog.style.display = 'inline';
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const pages = ['p1','p2','p3','p4','p5'];
+
+  for (let i = 0; i < pages.length; i++) {
+    prog.textContent = `Memproses halaman ${i+1}/${pages.length}…`;
+    const el = document.getElementById(pages[i]);
+    const canvas = await html2canvas(el, { scale: 2, useCORS: true, logging: false });
+    const img = canvas.toDataURL('image/jpeg', 0.92);
+    if (i > 0) pdf.addPage();
+    pdf.addImage(img, 'JPEG', 0, 0, 210, 297);
+  }
+
+  pdf.save('Katalog-Harga-Grosir-Barooka-2026.pdf');
+  btn.disabled = false;
+  prog.style.display = 'none';
+}
+</script>
+</body>
+</html>
