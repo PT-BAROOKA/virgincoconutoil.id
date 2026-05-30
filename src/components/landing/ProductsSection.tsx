@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Download } from "lucide-react";
 import vcoBulk1 from "@/assets/Curah_produk.jpeg";
 import vcoBulk2 from "@/assets/Maklon_produk.jpeg";
 import vcoBulk3 from "@/assets/vco-bulk-3.png";
@@ -140,6 +142,36 @@ const ProductsSection = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* COA & Specs CTA Banner */}
+        <div
+          className="mt-10 rounded-xl border border-border p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 animate-fade-in-up"
+          style={{ background: "var(--gradient-warm)", boxShadow: "var(--shadow-sm)" }}
+        >
+          <div className="flex-1 text-center md:text-left">
+            <p className="text-accent font-body text-xs tracking-widest uppercase mb-1">Transparansi Produk</p>
+            <h3 className="text-xl font-display font-bold text-foreground">
+              Spesifikasi &amp; Certificate of Analysis
+            </h3>
+            <p className="text-sm font-body text-muted-foreground mt-1">
+              Semua produk VCO Barooka telah diuji laboratorium terakreditasi KAN.
+              Lihat 23 parameter spesifikasi lengkap — termasuk asam laurat 48,04%.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <Link href="/produk/vco">
+              <Button variant="outline" className="font-body border-primary text-primary hover:bg-primary/5 w-full sm:w-auto">
+                Lihat Spesifikasi
+              </Button>
+            </Link>
+            <a href="/COA-VCO-PT-Barooka.pdf" download="COA-VCO-PT-Barooka.pdf">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-body gap-2 w-full sm:w-auto">
+                <Download size={16} />
+                Download COA
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </section>

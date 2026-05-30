@@ -8,8 +8,7 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
-import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
-import FloatingChatbot from "@/components/landing/FloatingChatbot";
+import FloatingContact from "@/components/landing/FloatingContact";
 
 export default function BlogListPage() {
   const { data: posts, isLoading } = useBlogPosts();
@@ -104,8 +103,7 @@ export default function BlogListPage() {
         </div>
       </main>
       <Footer />
-      <FloatingWhatsApp />
-      <FloatingChatbot />
+      <FloatingContact />
     </div>
   );
 }

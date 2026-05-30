@@ -12,6 +12,7 @@ const navLinks = [
   { label: "Beranda", href: "#beranda" },
   { label: "Keunggulan", href: "#keunggulan" },
   { label: "Produk", href: "#produk" },
+  { label: "COA", href: "/produk/vco" },
   { label: "Blog", href: "/blog" },
   { label: "Kontak", href: "#kontak" },
 ];

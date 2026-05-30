@@ -9,8 +9,7 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
-import FloatingWhatsApp from "@/components/landing/FloatingWhatsApp";
-import FloatingChatbot from "@/components/landing/FloatingChatbot";
+import FloatingContact from "@/components/landing/FloatingContact";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -119,8 +118,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ slug: str
         </article>
       </main>
       <Footer />
-      <FloatingWhatsApp />
-      <FloatingChatbot />
+      <FloatingContact />
     </div>
   );
 }
