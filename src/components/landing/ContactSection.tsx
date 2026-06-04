@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { leadsSupabase } from "@/integrations/supabase/leadsClient";
 
 const WA_NUMBER = "6285647486700";
 
@@ -15,15 +15,17 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Save lead to database
+    // Save lead to database (leads project = WFTH, not the blog project)
     try {
-      await supabase.from("leads").insert({
+      const { error } = await leadsSupabase.from("leads").insert({
         nama: form.nama,
         kontak: form.wa,
         sumber: "virgincoconutoil.id",
       });
-    } catch {
+      if (error) console.error("Lead insert failed:", error);
+    } catch (err) {
       // Don't block WhatsApp redirect on DB error
+      console.error("Lead insert threw:", err);
     }
 
     const message = `Halo, saya ingin bertanya tentang VCO Barooka.\n\nNama: ${form.nama}\nWhatsApp: ${form.wa}\nPesan: ${form.pesan}`;

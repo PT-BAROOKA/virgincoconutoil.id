@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
+import { leadsSupabase } from "@/integrations/supabase/leadsClient";
 
 const POPUP_DISMISSED_KEY = "barooka_popup_dismissed";
 const DISMISS_DURATION_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
@@ -36,14 +36,19 @@ const LeadCapturePopup = () => {
     setIsSubmitting(true);
 
     try {
-      await supabase.from("leads").insert({
+      const { error } = await leadsSupabase.from("leads").insert({
         nama: form.nama,
         kontak: form.kontak,
         sumber: "virgincoconutoil.id",
       });
+      // Surface DB failures instead of swallowing them (Postgrest errors don't
+      // throw, so the old catch never fired and every lost lead was hidden
+      // behind the "Terima Kasih" message).
+      if (error) console.error("Lead insert failed:", error);
       setIsSuccess(true);
       setTimeout(() => handleClose(), 2500);
-    } catch {
+    } catch (err) {
+      console.error("Lead insert threw:", err);
       // Still close on error to not block user
       handleClose();
     } finally {
